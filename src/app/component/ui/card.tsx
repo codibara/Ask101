@@ -2,7 +2,10 @@ import { ChatLeftText, Eye  } from 'react-bootstrap-icons';
 import Pill from './pill';
 import { Post } from "@/types/post";
 
-const Card = ({ title, userCategory, body, userId, postDate, commentCount, viewCount, optionA, optionB }: Post) => (
+import Link from 'next/link';
+
+const Card = ({ postId, title, userCategory, body, userId, postDate, commentCount, viewCount, optionA, optionB }: Post) => (
+    
     <div className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full md:max-w-[48%]">
         <div className="flex flex-col items-start gap-4">
             <div className='w-[100%]'>
@@ -20,6 +23,7 @@ const Card = ({ title, userCategory, body, userId, postDate, commentCount, viewC
             </div>
             <div className='w-[80%]'>
                 <p className="text-sm truncate text-ellipsis overflow-hidden whitespace-nowrap">{body}</p>
+                <Link href={`/post/${postId}`}>More</Link>
             </div>
         </div>
         <div className="flex flex-row justify-center gap-4">
@@ -49,6 +53,7 @@ const Card = ({ title, userCategory, body, userId, postDate, commentCount, viewC
             </div>
         </div>
     </div>
+    
 );
 
 export default Card;

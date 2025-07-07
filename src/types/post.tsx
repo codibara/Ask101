@@ -1,4 +1,5 @@
 export interface Post {
+    postId: number;
     title: string;
     userCategory: UserCategory;
     body: string;

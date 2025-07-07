@@ -1,5 +1,6 @@
 [
   {
+    "postId": 1,
     "title": "아르바이트생인데 사장이 자꾸 카톡해요",
     "userCategory": {
       "gender": "남자",
@@ -16,6 +17,7 @@
     "optionB": "말 안 한다"
   },
   {
+    "postId": 2,
     "title": "자취방 윗집이 새벽마다 청소기 돌려요",
     "userCategory": {
       "gender": "여자",
@@ -32,6 +34,7 @@
     "optionB": "포기한다"
   },
   {
+    "postId": 3,
     "title": "헤어진 남친이 친구한테 연락했대요",
     "userCategory": {
       "gender": "남자",
@@ -48,6 +51,7 @@
     "optionB": "말 안 한다"
   },
   {
+    "postId": 4,
     "title": "요즘 자꾸 현실도피만 하게 돼요",
     "userCategory": {
       "gender": "남자",
@@ -64,6 +68,7 @@
     "optionB": "말 안 한다"
   },
   {
+    "postId": 5,
     "title": "면접 끝나고 연락 안 오는 건 탈락일까?",
     "userCategory": {
       "gender": "여자",
@@ -80,6 +85,7 @@
     "optionB": "그만둔다"
   },
   {
+    "postId": 6,
     "title": "지금 퇴사하면 너무 무책임할까?",
     "userCategory": {
       "gender": "여자",
@@ -96,6 +102,7 @@
     "optionB": "그만둔다"
   },
   {
+    "postId": 7,
     "title": "매일 편의점 도시락 먹는 거 괜찮을까요?",
     "userCategory": {
       "gender": "남자",
@@ -112,6 +119,7 @@
     "optionB": "내가 사고 싶은 거"
   },
   {
+    "postId": 8,
     "title": "이불 밖은 위험한 계절이 왔다",
     "userCategory": {
       "gender": "여자",
@@ -128,6 +136,7 @@
     "optionB": "손절한다"
   },
   {
+    "postId": 9,
     "title": "소개팅 후 연락 끊김, 이유가 뭘까요?",
     "userCategory": {
       "gender": "여자",
@@ -144,6 +153,7 @@
     "optionB": "말 안 한다"
   },
   {
+    "postId": 10,
     "title": "카페 알바생인데 손님 때문에 우울해요",
     "userCategory": {
       "gender": "남자",
@@ -160,6 +170,7 @@
     "optionB": "손절한다"
   },
   {
+    "postId": 11,
     "title": "첫 월급 어디에 쓸까요?",
     "userCategory": {
       "gender": "여자",
@@ -176,6 +187,7 @@
     "optionB": "내가 사고 싶은 거"
   },
   {
+    "postId": 12,
     "title": "요즘 친구들이 다 바빠요",
     "userCategory": {
       "gender": "남자",
@@ -192,6 +204,7 @@
     "optionB": "그만둔다"
   },
   {
+    "postId": 13,
     "title": "오랜만에 연락 오는 전 썸남, 왜?",
     "userCategory": {
       "gender": "남자",
@@ -208,6 +221,7 @@
     "optionB": "손절한다"
   },
   {
+    "postId": 14,
     "title": "기상 시간, 6시 vs 9시 뭐가 좋을까?",
     "userCategory": {
       "gender": "남자",
@@ -224,6 +238,7 @@
     "optionB": "손절한다"
   },
   {
+    "postId": 15,
     "title": "저녁 약속, 친구가 계속 늦어요",
     "userCategory": {
       "gender": "여자",
@@ -240,6 +255,7 @@
     "optionB": "손절한다"
   },
   {
+    "postId": 16,
     "title": "운동할지 말지 고민 중",
     "userCategory": {
       "gender": "여자",
@@ -256,6 +272,7 @@
     "optionB": "포기한다"
   },
   {
+    "postId": 17,
     "title": "집에서 반려동물 키우고 싶어요",
     "userCategory": {
       "gender": "여자",
