@@ -1,12 +1,19 @@
 import { ChatLeftText, Eye  } from 'react-bootstrap-icons';
 import Pill from './pill';
 import { Post } from "@/types/post";
+import { mockUsers } from "@/data/mock_user_data";
 
 import Link from 'next/link';
 
-const Card = ({ postId, title, userCategory, body, userId, postDate, commentCount, viewCount, optionA, optionB }: Post) => (
-    
-    <div className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full md:max-w-[48%]">
+
+const Card = ({ postId, title, body, userId, postDate, commentCount, viewCount, optionA, optionB }: Post) => {
+    const user = mockUsers.find((u) => u.userId === userId);
+    if (!user) return null;
+
+    const { gender, mbti, age, occupation } = user.userCategory;
+
+    return(
+        <div className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full md:max-w-[48%]">
         <div className="flex flex-col items-start gap-4">
             <div className='w-[100%]'>
                 <div>
@@ -14,16 +21,16 @@ const Card = ({ postId, title, userCategory, body, userId, postDate, commentCoun
                 </div>
                 <div>
                     <Pill 
-                    gender={userCategory.gender}
-                    mbti={userCategory.mbti}
-                    age={userCategory.age}
-                    occupation={userCategory.occupation}
+                    gender={gender}
+                    mbti={mbti}
+                    age={age}
+                    occupation={occupation}
                     />
                 </div>
             </div>
-            <div className='w-[80%]'>
+            <div className='w-[100%] flex flex-row items-center'>
                 <p className="text-sm truncate text-ellipsis overflow-hidden whitespace-nowrap">{body}</p>
-                <Link href={`/post/${postId}`}>More</Link>
+                <Link href={`/post/${postId}`} className=''>More</Link>
             </div>
         </div>
         <div className="flex flex-row justify-center gap-4">
@@ -53,7 +60,9 @@ const Card = ({ postId, title, userCategory, body, userId, postDate, commentCoun
             </div>
         </div>
     </div>
+    )
     
-);
+    
+};
 
 export default Card;

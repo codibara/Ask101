@@ -1,7 +1,6 @@
 export interface Post {
     postId: number;
     title: string;
-    userCategory: UserCategory;
     body: string;
     userId: string;
     postDate: string;
@@ -16,4 +15,23 @@ export interface Post {
     mbti: string;
     age: string;
     occupation: string;
+  }
+
+  export interface Comment {
+    commentId: number;
+    postId: number;
+    userId: string;
+    comment: string;
+  }
+
+  export interface Reply {
+    commentId: number;
+    replyId: number;
+    userId: string;
+    comment: string;
+  }
+
+  export interface User{
+    userId: string;
+    userCategory: UserCategory;
   }

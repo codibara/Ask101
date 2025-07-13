@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import LogoMobile from "./component/shared/logoMobile";
 
 import Navigation from "./component/shared/navigation";
 
@@ -17,7 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="font-pretendard h-svh">
+      <body className="font-pretendard h-svh overflow-scroll">
+        <LogoMobile />
         <SessionProvider>{children}</SessionProvider>
         <Navigation />
       </body>
