@@ -1,8 +1,12 @@
+'use client';
+
 import { Comment } from "@/types/post";
 import { mockReplies } from "@/data/mock_reply";
 import { mockUsers } from "@/data/mock_user_data";
 import Pill from "@/app/component/ui/pill";
-import { ChatLeftText, Eye  } from 'react-bootstrap-icons';
+import { ChatLeftText } from 'react-bootstrap-icons';
+
+import { use, useState } from 'react';
 
 interface CommentProp extends Comment {}
 
@@ -10,6 +14,12 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
 
   const user = mockUsers.find((u) => u.userId === userId);
   const replies = mockReplies.filter((r) => r.commentId === commentId);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleReply = () => {
+    setIsOpen(prev => !prev);
+  }
 
   if (!user) return null;
 
@@ -30,7 +40,7 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
                   <p className="text-sm text-gray-500">{user.userId}</p>
                   <p className="text-sm text-gray-500">2025/01/23</p>
               </div>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-2 cursor-pointer" onClick={handleReply}>
                   <div className="flex flex-row items-center gap-1">
                       <ChatLeftText size={16} />
                       <p className="text-xs font-medium">{replies.length}</p>
@@ -45,7 +55,7 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
           const { gender, mbti, age, occupation } = replier.userCategory;
 
           return (
-            <div className="flex flex-col gap-2 ml-10" key={r.replyId}>
+            <div className={`${isOpen ? 'flex' : 'hidden'} flex-col gap-2 ml-10`} key={r.replyId}>
               <Pill 
                   gender={gender}
                   mbti={mbti}

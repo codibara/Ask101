@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChatLeftText, Eye, ArrowUpSquareFill } from 'react-bootstrap-icons';
+import { ChatLeftText, Eye, ArrowUpSquareFill, ExclamationTriangle } from 'react-bootstrap-icons';
 
 import { Post } from "@/types/post";
 import { mockUsers } from "@/data/mock_user_data";
@@ -54,10 +54,10 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
   const comments = mockComments.filter(comment => comment.postId === postId);
 
   return (
-    <main className="min-h-svh px-5 py-5 md:px-20">
+    <main className="min-h-svh px-5 py-5 md:px-26">
       <div className='max-w-5xl mx-auto'>
         <PageHeader onDeleteClick={() => setModalOpen(true)} title='게시물'/>
-
+        {/* Post Details */}
         <div className="flex flex-col items-start gap-4 my-5">
           <div className="w-full">
             <h1 className="text-2xl font-bold mb-1.5">{title}</h1>
@@ -93,11 +93,11 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
             </div>
           </div>
         </div>
-
+        {/* Comment Heading */}
         <div className="border-y border-gray-600 my-5 py-2">
           <p>댓글 {comments.length}</p>
         </div>
-        {/* Title Input */}
+        {/* Comment Input (Fixed to bottom)*/}
         <div className='fixed bottom-[72px] left-0 md:bottom-0 w-full flex flex-row gap-2 px-5 py-2 bg-dark-950'>
             <input
               id="title"
@@ -107,6 +107,7 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
             />
             <button><ArrowUpSquareFill size={24}/></button>
         </div>
+        {/* Comments */}
         <div className="flex flex-col gap-4">
           {comments.length > 0 ? (
             comments.map((c, i) => (
@@ -123,8 +124,10 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
           )}
         </div>
         
-
+        {/* Confirmation Modal*/}
         <ConfirmModal
+          icon={<ExclamationTriangle size={62} color='#B19DFF'/>}
+          primaryText='확인'
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           onConfirm={handleDelete}

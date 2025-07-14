@@ -29,9 +29,9 @@ export default function PageHeader({ onDeleteClick, title, showDropdown = true, 
   };
 
   return (
-    <div className="flex flex-row justify-between items-center">
-      <div className='h-10'>
-        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1">
+    <div className="flex flex-row justify-between items-center mb-5">
+      <div className='min-w-[40px] h-10'>
+        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1 cursor-pointer">
           <ChevronLeft />
           돌아가기
         </button>}
