@@ -4,4 +4,6 @@ export interface Notification{
     category: String;
     title: String;
     content: String;
+    date: String;
+    checked: Boolean;
 }

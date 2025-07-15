@@ -105,7 +105,7 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
               className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="댓글을 입력하세요"
             />
-            <button><ArrowUpSquareFill size={24}/></button>
+            <button><ChatLeftText size={24} color={'#B19DFF'}/></button>
         </div>
         {/* Comments */}
         <div className="flex flex-col gap-4">

@@ -15,7 +15,7 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
   const user = mockUsers.find((u) => u.userId === userId);
   const replies = mockReplies.filter((r) => r.commentId === commentId);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleReply = () => {
     setIsOpen(prev => !prev);

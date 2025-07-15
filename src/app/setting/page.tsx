@@ -11,6 +11,7 @@ import ConfirmModal from '../component/ui/confirmModal';
 export default function Post() {
 
   const router = useRouter();
+  const errorMessage = '사용불가능한 닉네임 입니다.'
 
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedMBTI, setSelectedMBTI] = useState({
@@ -57,26 +58,24 @@ export default function Post() {
             />
           <div className="flex flex-col gap-8">
             {/* Nickname Input */}
-            <div className='w-full h-[130px] flex flex-col justify-center items-center gap-4 px-4 py-2 rounded-md bg-dark-900'>
+            <div className='w-full flex flex-col justify-center gap-3'>
+              <p className="block text-sm font-medium mb-2">
+                닉네임
+              </p>
               <input
                 id="title"
                 type="text"
-                className="text-center px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 rounded-md bg-main text-dark-950 focus:outline-none focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950"
+                value=""
                 placeholder="닉네임을 입력하세요"
               />
-              <p className='text-sm'>2025/05/04 가입</p>
+              <div className='flex flex-row justify-between'>
+                <p className='text-sm text-red-600'>{errorMessage}</p>
+                <p className='text-sm text-right text-gray-600'>2025/05/04 가입</p>
+              </div>
             </div>
             
-            <div className='flex flex-row gap-2'>
-              <Link href='#' className='h-[46px] flex flex-row gap-1 justify-center items-center px-4 py-2 flex-1/2 rounded-xl bg-main text-dark-950'>
-                <QuestionCircle /> 
-                문의하기 
-              </Link>
-              <Link href='#' className='h-[46px] flex flex-row gap-1 justify-center items-center px-4 py-2 flex-1/2 rounded-xl bg-main text-dark-950'>
-                <BoxArrowRight /> 
-                로그아웃 
-              </Link>
-            </div>
+            
             {/* Gender Inputs */}
             <div>
               <p className="block text-sm font-medium mb-2">
@@ -85,8 +84,8 @@ export default function Post() {
               <div className="flex flex-row gap-2">
                 <input
                   type="button"
-                  className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                    ${selectedGender === '여자' ? 'bg-gray-600' : 'bg-dark-900'}
+                  className={`px-4 py-2 rounded-full focus:outline-none 
+                    ${selectedGender === '여자' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                   `}
                   name="여자"
                   value="여자"
@@ -94,8 +93,8 @@ export default function Post() {
                 />
                 <input
                   type="button"
-                  className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                    ${selectedGender === '남자' ? 'bg-gray-600' : 'bg-dark-900'}
+                  className={`px-4 py-2 rounded-full focus:outline-none 
+                    ${selectedGender === '남자' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                   `}
                   name="남자"
                   value="남자"
@@ -108,12 +107,12 @@ export default function Post() {
               <p className="block text-sm font-medium mb-2">
                 MBTI
               </p>
-              <div className='flex flex-row gap-2'>
+              <div className='flex flex-row gap-3'>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.ei === 'E'? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.ei === 'E'? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="E"
                     value="E 외향"
@@ -121,20 +120,19 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.ei === 'I'? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.ei === 'I'? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="I"
                     value="I 내향"
                     onClick={() => handleMBTISelect('ei', 'I')}
                   />
                 </div>
-                <div className='border border-gray-600'></div>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.sn === 'S' ? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.sn === 'S' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="S"
                     value="S 감각"
@@ -142,20 +140,19 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.sn === 'N' ? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.sn === 'N' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="N"
                     value="N 직관"
                     onClick={() => handleMBTISelect('sn', 'N')}
                   />
                 </div>
-                <div className='border border-gray-600'></div>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.tf === 'T' ? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.tf === 'T' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="T"
                     value="T 사고"
@@ -163,20 +160,19 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.tf === 'F'? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.tf === 'F'? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="F"
                     value="F 감정"
                     onClick={() => handleMBTISelect('tf', 'F')}
                   />
                 </div>
-                <div className='border border-gray-600'></div>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
                     className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.jp === 'J' ? 'bg-gray-600' : 'bg-dark-900'}
+                      ${selectedMBTI.jp === 'J' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="J"
                     value="J 판단"
@@ -184,8 +180,8 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
-                      ${selectedMBTI.jp === 'P' ? 'bg-gray-600' : 'bg-dark-900'}
+                    className={`px-4 py-2 rounded-full focus:outline-none 
+                      ${selectedMBTI.jp === 'P' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="P"
                     value="P 인식"
@@ -202,7 +198,7 @@ export default function Post() {
               <div className='w-32 flex flex-row px-4 py-2 rounded-full bg-dark-900'>
                 <input
                     type="text"
-                    className='w-full flex focus:outline-none rounded-md focus:ring-2 focus:ring-blue-500 mr-2'
+                    className='w-full flex focus:outline-none rounded-md mr-2'
                     name="남자"
                     value=""
                 />
@@ -210,7 +206,7 @@ export default function Post() {
               </div>
             </div>
             {/* Occupation Button */}
-            <div>
+            <div className='flex flex-col gap-3 items-start'>
               <p className="block text-sm font-medium mb-2">직업</p>
               <div className="flex flex-row gap-2 flex-wrap">
                 {[
@@ -224,8 +220,8 @@ export default function Post() {
                   <input
                     key={job}
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      selectedOccupation === job ? 'bg-gray-600' : 'bg-dark-900'
+                    className={`px-4 py-2 rounded-full focus:outline-none  ${
+                      selectedOccupation === job ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'
                     }`}
                     value={job}
                     onClick={() =>
@@ -233,29 +229,38 @@ export default function Post() {
                     }
                   />
                 ))}
-
-                <div className="flex flex-row px-4 py-2 rounded-full bg-dark-900">
-                  <input
-                    type="text"
-                    className="w-full focus:outline-none rounded-md focus:ring-2 focus:ring-blue-500 mr-2"
-                    placeholder="기타: 직접입력"
-                    value={customOccupation}
-                    onChange={(e) => {
-                      setCustomOccupation(e.target.value);
-                      setSelectedOccupation('기타');
-                    }}
-                  />
-                </div>
               </div>
+
+              <input
+                type="text"
+                className="px-4 py-2 focus:outline-none rounded-full bg-dark-900 focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950 mr-2"
+                placeholder="기타: 직접입력"
+                value={customOccupation}
+                onChange={(e) => {
+                  setCustomOccupation(e.target.value);
+                  setSelectedOccupation('기타');
+                }}
+              />
+
             </div>
 
             {/* Submit Button */}
-            <button
+            {/* <button
               onClick={handleSave}
               className="bg-main py-4 px-8 rounded-xl font-semibold text-dark-950 md:ml-auto hover:cursor-pointer"
             >
               저장
-            </button>
+            </button> */}
+            <div className='flex flex-row gap-2'>
+              <Link href='#' className='h-[46px] flex flex-row gap-2 justify-center items-center px-4 py-2 flex-1/2 rounded-xl text-main border border-main'>
+                <QuestionCircle /> 
+                문의하기 
+              </Link>
+              <Link href='#' className='h-[46px] flex flex-row gap-2 justify-center items-center px-4 py-2 flex-1/2 rounded-xl text-main border border-main'>
+                <BoxArrowRight /> 
+                로그아웃 
+              </Link>
+            </div>
           </div>
         </div>
         <ConfirmModal

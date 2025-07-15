@@ -55,7 +55,7 @@ export default function Post() {
 
             {/* Option Inputs */}
             <div>
-              <p className="block text-sm font-medium mb-1">
+              <p className="block text-sm font-medium mb-2">
                 투표 옵션 설정
               </p>
               <div className="flex flex-col md:flex-row gap-2 md:gap-4">
