@@ -17,6 +17,7 @@ import ConfirmModal from '@/app/component/ui/confirmModal';
 export default function PostDetail({ params }: { params: { postId: string } }) {
   const [post, setPost] = useState<Post | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [commentInput, setCommentInput] = useState('');
 
   const postId = parseInt(params.postId, 10);
 
@@ -28,6 +29,10 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
     console.log('Deleted!');
     // Add delete API logic here
     setModalOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCommentInput(e.target.value);
   };
 
   if (!post) {
@@ -54,7 +59,7 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
   const comments = mockComments.filter(comment => comment.postId === postId);
 
   return (
-    <main className="min-h-svh px-5 py-5 md:px-26">
+    <main className="min-h-svh px-5 py-5 md:px-26 mb-[72px] md:mb-0">
       <div className='max-w-5xl mx-auto'>
         <PageHeader onDeleteClick={() => setModalOpen(true)} title='게시물'/>
         {/* Post Details */}
@@ -93,22 +98,37 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
             </div>
           </div>
         </div>
-        {/* Comment Heading */}
-        <div className="border-y border-gray-600 my-5 py-2">
-          <p>댓글 {comments.length}</p>
-        </div>
-        {/* Comment Input (Fixed to bottom)*/}
-        <div className='fixed bottom-[72px] left-0 md:bottom-0 w-full flex flex-row gap-2 px-5 py-2 bg-dark-950'>
-            <input
-              id="title"
-              type="text"
-              className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="댓글을 입력하세요"
-            />
-            <button><ChatLeftText size={24} color={'#B19DFF'}/></button>
-        </div>
-        {/* Comments */}
-        <div className="flex flex-col gap-4">
+        <div className='flex flex-col gap-4'>
+          {/* Comment Heading */}
+          <div className="border-y border-gray-600 py-2 mt-5">
+            <p>댓글 {comments.length}</p>
+          </div>
+          {/* Comment Input (Fixed to bottom)*/}
+          <div className='fixed bottom-[72px] left-0 md:hidden md:bottom-0 w-full flex flex-row gap-2 px-5 py-2 bg-dark-950'>
+              <input
+                id="title"
+                type="text"
+                className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="댓글을 입력하세요"
+                value={commentInput}
+                onChange={handleInputChange}
+              />
+              <button><ChatLeftText size={24} color={'#B19DFF'}/></button>
+          </div>
+          {/* Comment Input Desktop*/}
+          <div className='hidden w-full md:flex flex-row gap-2 bg-dark-950'>
+                <input
+                  id="title"
+                  type="text"
+                  className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="댓글을 입력하세요"
+                  value={commentInput}
+                  onChange={handleInputChange}
+                />
+                <button><ChatLeftText size={24} color={'#B19DFF'}/></button>
+            </div>
+          {/* Comments */}
+          <div className="flex flex-col gap-4">
           {comments.length > 0 ? (
             comments.map((c, i) => (
               <CommentItem
@@ -123,6 +143,8 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
             <p className="text-sm text-gray-400">아직 댓글이 없습니다.</p>
           )}
         </div>
+      </div>
+        
         
         {/* Confirmation Modal*/}
         <ConfirmModal

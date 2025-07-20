@@ -17,6 +17,7 @@
   --color-text: #D9D9D9;
   --color-main: rgba(177,157,255,1);
   --color-main-shade: rgba(106,96,146,1);
+  --color-main-shade-secondary: rgba(155,141,211,1);
   --color-dark-950: var(--dark-1);
   --color-dark-900: var(--dark-2);
   --color-gray-600: var(--gray-1);

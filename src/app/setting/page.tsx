@@ -7,6 +7,7 @@ import { QuestionCircle, BoxArrowRight, CheckCircle, Check } from 'react-bootstr
 
 import PageHeader from '@/app/component/shared/pageHeader';
 import ConfirmModal from '../component/ui/confirmModal';
+import Button from "@/app/component/ui/button"
 
 export default function Post() {
 
@@ -252,13 +253,21 @@ export default function Post() {
               저장
             </button> */}
             <div className='flex flex-row gap-2'>
-              <Link href='#' className='h-[46px] flex flex-row gap-2 justify-center items-center px-4 py-2 flex-1/2 rounded-xl text-main border border-main'>
-                <QuestionCircle /> 
-                문의하기 
+              <Link href='#' className='flex-1/2'>
+                <Button
+                text="문의하기"
+                beforeIcon={<QuestionCircle />}
+                variant='secondary'
+                disabled={false}
+                />
               </Link>
-              <Link href='#' className='h-[46px] flex flex-row gap-2 justify-center items-center px-4 py-2 flex-1/2 rounded-xl text-main border border-main'>
-                <BoxArrowRight /> 
-                로그아웃 
+              <Link href='#' className='flex-1/2'>
+              <Button
+                text="문의하기"
+                beforeIcon={<BoxArrowRight />}
+                variant='primary'
+                disabled={false}
+                />
               </Link>
             </div>
           </div>

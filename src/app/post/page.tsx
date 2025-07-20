@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+
 import PageHeader from '@/app/component/shared/pageHeader';
+import Button from '../component/ui/button';
 
 export default function Post() {
 
@@ -73,12 +75,12 @@ export default function Post() {
               </div>
             </div>
             {/* Submit Button */}
-            <button
+            <Button
+              text="투표 시작"
+              variant='primary'
+              disabled={false}
               onClick={handleSave}
-              className="bg-main py-4 px-8 rounded-xl font-semibold text-dark-950 md:ml-auto hover:cursor-pointer"
-            >
-              투표 시작
-            </button>
+            />
           </div>
         </div>
       </main>
