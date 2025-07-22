@@ -40,10 +40,13 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
                   <p className="text-sm text-gray-500">{user.userId}</p>
                   <p className="text-sm text-gray-500">2025/01/23</p>
               </div>
-              <div className="flex flex-row gap-2 cursor-pointer" onClick={handleReply}>
-                  <div className="flex flex-row items-center gap-1">
+              <div 
+                className="flex flex-row gap-2 cursor-pointer items-center" 
+                onClick={handleReply}
+              >
+                  <div className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-50">
                       <ChatLeftText size={16} />
-                      <p className="text-xs font-medium">{replies.length}</p>
+                      <p className="text-xs font-medium underline -mt-1">{replies.length}</p>
                   </div>
               </div>
             </div>

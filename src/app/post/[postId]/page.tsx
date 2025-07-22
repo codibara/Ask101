@@ -13,6 +13,7 @@ import Pill from '@/app/component/ui/pill';
 import CommentItem from "@/app/component/ui/commentItem";
 import PageHeader from '@/app/component/shared/pageHeader';
 import ConfirmModal from '@/app/component/ui/confirmModal';
+import Button from '@/app/component/ui/button';
 
 export default function PostDetail({ params }: { params: { postId: string } }) {
   const [post, setPost] = useState<Post | null>(null);
@@ -104,29 +105,41 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
             <p>댓글 {comments.length}</p>
           </div>
           {/* Comment Input (Fixed to bottom)*/}
-          <div className='fixed bottom-[72px] left-0 md:hidden md:bottom-0 w-full flex flex-row gap-2 px-5 py-2 bg-dark-950'>
+          <div className='fixed bottom-[72px] left-0 md:hidden md:bottom-0 w-full gap-2 px-5 py-2 bg-dark-950 '>
+            <div className='flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 py-1'>
               <input
                 id="title"
                 type="text"
-                className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 bg-dark-900 rounded-md focus:outline-none "
                 placeholder="댓글을 입력하세요"
                 value={commentInput}
                 onChange={handleInputChange}
               />
-              <button><ChatLeftText size={24} color={'#B19DFF'}/></button>
+              <Button
+                beforeIcon={<ChatLeftText size={16} color='#B19DFF'/>}
+                variant='tertiary'
+                disabled={false}
+              />
+            </div>
           </div>
           {/* Comment Input Desktop*/}
-          <div className='hidden w-full md:flex flex-row gap-2 bg-dark-950'>
-                <input
-                  id="title"
-                  type="text"
-                  className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="댓글을 입력하세요"
-                  value={commentInput}
-                  onChange={handleInputChange}
-                />
-                <button><ChatLeftText size={24} color={'#B19DFF'}/></button>
+          <div className='hidden w-full md:block bg-dark-950'>
+            <div className='flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 py-1'>
+              <input
+                id="title"
+                type="text"
+                className="w-full px-2 bg-dark-900 rounded-md focus:outline-none "
+                placeholder="댓글을 입력하세요"
+                value={commentInput}
+                onChange={handleInputChange}
+              />
+              <Button
+                beforeIcon={<ChatLeftText size={16} color='#B19DFF'/>}
+                variant='tertiary'
+                disabled={false}
+              />
             </div>
+          </div>
           {/* Comments */}
           <div className="flex flex-col gap-4">
           {comments.length > 0 ? (

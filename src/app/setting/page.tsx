@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
-import { QuestionCircle, BoxArrowRight, CheckCircle, Check } from 'react-bootstrap-icons';
+import { QuestionCircle, BoxArrowRight, CheckCircle, Check, BoxArrowDown } from 'react-bootstrap-icons';
 
 import PageHeader from '@/app/component/shared/pageHeader';
 import ConfirmModal from '../component/ui/confirmModal';
@@ -14,6 +14,7 @@ export default function Post() {
   const router = useRouter();
   const errorMessage = '사용불가능한 닉네임 입니다.'
 
+  const [userNickName, setUserNickName] = useState('');
   const [selectedGender, setSelectedGender] = useState('');
   const [selectedMBTI, setSelectedMBTI] = useState({
     ei: '',
@@ -23,15 +24,17 @@ export default function Post() {
   });
   const [selectedOccupation, setSelectedOccupation] = useState('');
   const [customOccupation, setCustomOccupation] = useState('');
-
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleUserNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserNickName(e.target.value);
+  };
+  
 
   const handleSave = () => {
     console.log('Saved!');
     // Add delete API logic here
     setModalOpen(true);
-
-
   };
 
   const handleGenderSelect = (gender: string) => {
@@ -45,10 +48,6 @@ export default function Post() {
     }));
   };
   
-  const handleOccupationSelect = (job: string) => {
-    setSelectedOccupation(prev => (prev === job ? '' : job));
-  };
-
     return (
       <main className="min-h-svh px-5 py-5 md:px-26">
         <div className='max-w-5xl mx-auto'>
@@ -67,7 +66,8 @@ export default function Post() {
                 id="title"
                 type="text"
                 className="px-4 py-2 rounded-md bg-main text-dark-950 focus:outline-none focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950"
-                value=""
+                onChange={handleUserNickname}
+                value={userNickName}
                 placeholder="닉네임을 입력하세요"
               />
               <div className='flex flex-row justify-between'>
@@ -172,7 +172,7 @@ export default function Post() {
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500
+                    className={`px-4 py-2 rounded-full focus:outline-none
                       ${selectedMBTI.jp === 'J' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="J"
@@ -255,16 +255,17 @@ export default function Post() {
             <div className='flex flex-row gap-2'>
               <Link href='#' className='flex-1/2'>
                 <Button
-                text="문의하기"
-                beforeIcon={<QuestionCircle />}
+                text="로그아웃"
+                beforeIcon={ <BoxArrowRight />}
                 variant='secondary'
                 disabled={false}
                 />
               </Link>
               <Link href='#' className='flex-1/2'>
               <Button
-                text="문의하기"
-                beforeIcon={<BoxArrowRight />}
+                text="저장하기"
+                beforeIcon={<BoxArrowDown />}
+                onClick={handleSave}
                 variant='primary'
                 disabled={false}
                 />

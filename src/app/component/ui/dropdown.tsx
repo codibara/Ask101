@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { ThreeDots } from 'react-bootstrap-icons';
 import { ReactNode } from 'react';
 
+import Button from './button';
+
 type Option = {
   label: string;
   value: string;
@@ -40,18 +42,17 @@ export default function Dropdown({ options, onSelect, placeholder = 'Select...' 
 
   return (
     <div ref={dropdownRef} className="relative inline-block">
-      <button
+      <Button
         onClick={(e) => {
-          e.stopPropagation(); // prevent event bubbling
+          e.stopPropagation();
           setIsOpen((prev) => !prev);
         }}
-        className="p-1"
-      >
-        <ThreeDots />
-      </button>
+        variant="tertiary"
+        beforeIcon={<ThreeDots />}
+      />
 
       {isOpen && (
-        <ul className="absolute z-10 right-0 top-6 bg-dark-900 rounded-lg w-[130px] shadow">
+        <ul className="absolute z-10 right-0 top-11 bg-dark-900 rounded-lg w-[130px] shadow">
           {options.map((option) => (
             <li
               key={option.value}
