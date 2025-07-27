@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
-import { QuestionCircle, BoxArrowRight, CheckCircle, Check, BoxArrowDown } from 'react-bootstrap-icons';
+import { QuestionCircle, BoxArrowRight, CheckCircle, Check, Download, Flag } from 'react-bootstrap-icons';
 
 import PageHeader from '@/app/component/shared/pageHeader';
 import ConfirmModal from '../component/ui/confirmModal';
@@ -16,6 +16,7 @@ export default function Post() {
 
   const [userNickName, setUserNickName] = useState('');
   const [selectedGender, setSelectedGender] = useState('');
+  const [userBirthYear, setUserBirthYear] = useState('');
   const [selectedMBTI, setSelectedMBTI] = useState({
     ei: '',
     sn: '',
@@ -30,6 +31,10 @@ export default function Post() {
     setUserNickName(e.target.value);
   };
   
+  const handleUserBirthYear = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onlyNums = e.target.value.replace(/\D/g, '').slice(0, 4);
+    setUserBirthYear(onlyNums);
+  };
 
   const handleSave = () => {
     console.log('Saved!');
@@ -49,7 +54,7 @@ export default function Post() {
   };
   
     return (
-      <main className="min-h-svh px-5 py-5 md:px-26">
+      <main className="min-h-[calc(100svh-180px)] md:h-svh  px-5 py-5 md:px-26">
         <div className='max-w-5xl mx-auto'>
           <PageHeader
             showBack={false} 
@@ -65,7 +70,7 @@ export default function Post() {
               <input
                 id="title"
                 type="text"
-                className="px-4 py-2 rounded-md bg-main text-dark-950 focus:outline-none focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950"
+                className="px-3 py-1 h-12 rounded-md bg-main text-dark-950 focus:outline-none focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950"
                 onChange={handleUserNickname}
                 value={userNickName}
                 placeholder="닉네임을 입력하세요"
@@ -85,7 +90,7 @@ export default function Post() {
               <div className="flex flex-row gap-2">
                 <input
                   type="button"
-                  className={`px-4 py-2 rounded-full focus:outline-none 
+                  className={`px-3 py-1 rounded-full focus:outline-none 
                     ${selectedGender === '여자' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                   `}
                   name="여자"
@@ -94,7 +99,7 @@ export default function Post() {
                 />
                 <input
                   type="button"
-                  className={`px-4 py-2 rounded-full focus:outline-none 
+                  className={`px-3 py-1 rounded-full focus:outline-none 
                     ${selectedGender === '남자' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                   `}
                   name="남자"
@@ -112,7 +117,7 @@ export default function Post() {
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.ei === 'E'? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="E"
@@ -121,7 +126,7 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.ei === 'I'? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="I"
@@ -129,10 +134,11 @@ export default function Post() {
                     onClick={() => handleMBTISelect('ei', 'I')}
                   />
                 </div>
+                <div className='border border-gray-600'></div>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.sn === 'S' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="S"
@@ -141,7 +147,7 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.sn === 'N' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="N"
@@ -149,10 +155,11 @@ export default function Post() {
                     onClick={() => handleMBTISelect('sn', 'N')}
                   />
                 </div>
+                <div className='border border-gray-600'></div>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.tf === 'T' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="T"
@@ -161,7 +168,7 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.tf === 'F'? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="F"
@@ -169,10 +176,11 @@ export default function Post() {
                     onClick={() => handleMBTISelect('tf', 'F')}
                   />
                 </div>
+                <div className='border border-gray-600'></div>
                 <div className="flex flex-col gap-2">
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none
+                    className={`px-3 py-1 rounded-full focus:outline-none
                       ${selectedMBTI.jp === 'J' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="J"
@@ -181,7 +189,7 @@ export default function Post() {
                   />
                   <input
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none 
+                    className={`px-3 py-1 rounded-full focus:outline-none 
                       ${selectedMBTI.jp === 'P' ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'}
                     `}
                     name="P"
@@ -192,18 +200,20 @@ export default function Post() {
               </div>
             </div>
             {/* DOB Inputs */}
+            
             <div>
               <p className="block text-sm font-medium mb-2">
                 출생연도
               </p>
-              <div className='w-32 flex flex-row px-4 py-2 rounded-full bg-dark-900'>
+              <div className='w-32 relative'>
                 <input
-                    type="text"
-                    className='w-full flex focus:outline-none rounded-md mr-2'
-                    name="남자"
-                    value=""
+                    type="number"
+                    className='w-full px-3 py-1 focus:outline-none rounded-full bg-dark-900 focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950 no-spinner'
+                    name="출생연도"
+                    value={userBirthYear}
+                    onChange={handleUserBirthYear}
                 />
-                년
+                <p className='absolute right-3 bottom-1'>년</p>
               </div>
             </div>
             {/* Occupation Button */}
@@ -221,7 +231,7 @@ export default function Post() {
                   <input
                     key={job}
                     type="button"
-                    className={`px-4 py-2 rounded-full focus:outline-none  ${
+                    className={`px-3 py-1 rounded-full focus:outline-none  ${
                       selectedOccupation === job ? 'bg-gray-600' : 'bg-dark-900 text-gray-600'
                     }`}
                     value={job}
@@ -234,9 +244,10 @@ export default function Post() {
 
               <input
                 type="text"
-                className="px-4 py-2 focus:outline-none rounded-full bg-dark-900 focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950 mr-2"
-                placeholder="기타: 직접입력"
+                className="px-3 py-1 focus:outline-none rounded-full bg-dark-900 focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950 mr-2"
+                placeholder="기타: 직접입력(10자이내)"
                 value={customOccupation}
+                maxLength={10}
                 onChange={(e) => {
                   setCustomOccupation(e.target.value);
                   setSelectedOccupation('기타');
@@ -253,23 +264,20 @@ export default function Post() {
               저장
             </button> */}
             <div className='flex flex-row gap-2'>
-              <Link href='#' className='flex-1/2'>
                 <Button
                 text="로그아웃"
                 beforeIcon={ <BoxArrowRight />}
                 variant='secondary'
-                disabled={false}
+                isLink={true}
                 />
-              </Link>
-              <Link href='#' className='flex-1/2'>
-              <Button
-                text="저장하기"
-                beforeIcon={<BoxArrowDown />}
-                onClick={handleSave}
-                variant='primary'
-                disabled={false}
+                <Button
+                  text="저장하기"
+                  beforeIcon={<Download />}
+                  onClick={handleSave}
+                  variant='primary'
+                  isLink={true}
                 />
-              </Link>
+
             </div>
           </div>
         </div>

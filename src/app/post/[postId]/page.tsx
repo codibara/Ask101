@@ -19,6 +19,11 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
   const [post, setPost] = useState<Post | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [commentInput, setCommentInput] = useState('');
+  const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
+
+  const handleOptionSelect = (option: 'A' | 'B') => {
+    setSelectedOption(prev => (prev === option ? null : option));
+  };
 
   const postId = parseInt(params.postId, 10);
 
@@ -73,11 +78,11 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
         </div>
 
         <div className="flex flex-row justify-center gap-4 mb-5">
-          <div className="flex flex-col justify-center items-center w-full max-w-[290px] p-5 bg-main rounded-[10px]">
+          <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 bg-main rounded-[10px] ${selectedOption === 'A' ? 'border-2 border-gray-400' : 'border-2 border-main'}`} onClick={() => handleOptionSelect('A')}>
             <p className="text-[64px] text-dark-950 font-semibold leading-16">71</p>
             <p className="text-xs text-dark-950">{optionA}</p>
           </div>
-          <div className="flex flex-col justify-center items-center w-full max-w-[290px] p-5 bg-main/50 rounded-[10px]">
+          <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 rounded-[10px] border bg-main-shade ${selectedOption === 'B' ? 'border-2 border-gray-400' : 'border-2 border-main-shade'}`} onClick={() => handleOptionSelect('B')}>
             <p className="text-[64px] text-dark-950 font-semibold leading-16">28</p>
             <p className="text-xs text-dark-950">{optionB}</p>
           </div>
@@ -119,6 +124,7 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
                 beforeIcon={<ChatLeftText size={16} color='#B19DFF'/>}
                 variant='tertiary'
                 disabled={false}
+                isLink={false}
               />
             </div>
           </div>
@@ -136,12 +142,12 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
               <Button
                 beforeIcon={<ChatLeftText size={16} color='#B19DFF'/>}
                 variant='tertiary'
-                disabled={false}
+                isLink={false}
               />
             </div>
           </div>
           {/* Comments */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6">
           {comments.length > 0 ? (
             comments.map((c, i) => (
               <CommentItem
@@ -162,12 +168,13 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
         {/* Confirmation Modal*/}
         <ConfirmModal
           icon={<ExclamationTriangle size={62} color='#B19DFF'/>}
-          primaryText='확인'
+          primaryText='삭제'
+          secondaryText='취소'
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           onConfirm={handleDelete}
-          title=""
-          message="투표가 시작된 게시물은 삭제할 수 없습니다."
+          title="삭제 후 복원할 수 없습니다."
+          message="그래도 삭제 하시겠습니까?"
         />
       </div>
     </main>

@@ -38,24 +38,35 @@ export default function Post() {
             />
           <div className="flex flex-col gap-6 h-full min-h-[calc(100svh-240px)]">
             {/* Title Input */}
-            <div>
-              <input
-                id="title"
-                type="text"
-                className="w-full py-2 rounded-md focus:outline-none"
-                placeholder="제목을 입력하세요"
+            <div className='w-full flex flex-row gap-2 py-2 rounded-md items-center'>
+              <TextareaAutosize
+                  value={title}
+                  maxLength={35}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="제목을 입력하세요"
+                  minRows={1}
+                  className="px-4 py-2 rounded-md focus:outline-none resize-none flex-grow"
               />
+              <div className="text-xs  text-gray-500">
+                {title.length}/35자
+              </div>
             </div>
             {/* Content Textarea */}
-            <TextareaAutosize
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="내용을 입력하세요 (선택)"
-              minRows={6}
-              className="w-full px-4 py-2 bg-dark-900 rounded-md focus:outline-none resize-none flex-grow"
-            />
+            <div className="w-full relative">
+              <TextareaAutosize
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="내용을 입력하세요 (선택)"
+                minRows={6}
+                maxLength={500}
+                className="w-full px-4 py-2 pb-6 bg-dark-900 rounded-md focus:outline-none resize-none flex-grow"
+              />
+              <div className="absolute left-3 bottom-4 text-xs text-gray-500">
+                {content.length}/500자
+              </div>
+            </div>
             {/* Option Inputs */}
-            <div>
+            <div className='flex-grow'>
               <p className="block text-sm font-medium mb-2">
                 투표 옵션 설정
               </p>
@@ -74,12 +85,15 @@ export default function Post() {
               </div>
             </div>
             {/* Submit Button */}
-            <Button
-              text="투표 시작"
-              variant='primary'
-              disabled={false}
-              onClick={handleSave}
-            />
+            <div className='flex flex-row justify-end'>
+              <Button
+                text="투표 시작"
+                variant='primary'
+                onClick={handleSave}
+                isLink={false}
+                isLoading={true}
+              />
+            </div>
           </div>
         </div>
       </main>

@@ -13,7 +13,8 @@ const Card = ({ postId, title, body, userId, postDate, commentCount, viewCount, 
     const { gender, mbti, age, occupation } = user.userCategory;
 
     return(
-        <div className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full md:max-w-[48%]">
+        <Link href={`/post/${postId}`} className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full md:max-w-[48%] border border-dark-900 hover:bg-neutral-800 active:bg-neutral-700">
+        
         <div className="flex flex-col items-start gap-4">
             <div className='w-[100%]'>
                 <div>
@@ -30,7 +31,6 @@ const Card = ({ postId, title, body, userId, postDate, commentCount, viewCount, 
             </div>
             <div className='w-[100%] flex flex-row items-center'>
                 <p className="text-sm truncate text-ellipsis overflow-hidden whitespace-nowrap">{body}</p>
-                <Link href={`/post/${postId}`} className=''>More</Link>
             </div>
         </div>
         <div className="flex flex-row justify-center gap-4">
@@ -59,7 +59,7 @@ const Card = ({ postId, title, body, userId, postDate, commentCount, viewCount, 
                 </div>
             </div>
         </div>
-    </div>
+    </Link>
     )
     
     

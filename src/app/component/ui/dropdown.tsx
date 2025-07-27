@@ -49,6 +49,7 @@ export default function Dropdown({ options, onSelect, placeholder = 'Select...' 
         }}
         variant="tertiary"
         beforeIcon={<ThreeDots />}
+        isLink={false}
       />
 
       {isOpen && (
