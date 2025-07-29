@@ -16,7 +16,7 @@ export default function Navigation() {
         <div className="flex flex-row justify-center py-4">
           <div className="w-[328px] md:w-[484px] min-h-[calc(100svh-180px)] md:h-svh flex flex-col gap-6 md:justify-center md:items-center">
             <div className="flex-grow md:flex-none flex flex-col gap-4">
-              <div className="w-[200px] h-[100px] bg-dark-900 md:hidden">Logo</div>
+              <div className="md:hidden">Text</div>
               <p>로그인이 필요한 서비스 입니다.</p>
             </div>
             <div className="flex flex-col items-center gap-9">
@@ -46,16 +46,18 @@ export default function Navigation() {
               ) : (
                 <div className="flex flex-col gap-3.5 w-full max-w-[328px]">
                   <IconButton
-                    text='구글 계정으로 계속하기'
+                    text='Google 계정으로 계속하기'
                     onClick={() => signIn("google", { callbackUrl: "/" })}
                     variant="primary"
                     isGoogle={true}
+                    disabled={false}
                   />
                   <IconButton
                     text='로그인 없이 홈으로 돌아가기'
                     onClick={() => router.push('/')}
                     variant="secondary"
                     isGoogle={false}
+                    disabled={true}
                   />
               </div>
               )}

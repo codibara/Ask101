@@ -24,10 +24,10 @@
   --color-gray-500: var(--gray-2);
   --color-gray-400: var(--gray-3);
   --color-login-normal: rgba(13,13,13,1);
-  --color-login-hover: rgba(51,51,51,1);
-  --color-login-active: rgba(98,98,98,1);
-  --color-login-disabled: rgba(91,91,91,1);
-  --color-login-secondary-normal: rgba(255,255,255,1);
+  --color-login-hover: var(--main-shade);
+  --color-login-active: var(--gray-1);
+  --color-login-disabled: var(--dark-2);
+  --color-login-secondary-normal: rgba(51,51,51,1);
   --color-login-secondery-hover: rgba(236,236,236,1);
   --color-login-stroke: rgba(205,205,205,1);
   --color-login-text-on-dark: rgba(255,255,255,1);

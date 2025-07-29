@@ -20,14 +20,16 @@ const IconButton = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary',
   `;
   const variantClasses = {
     primary: `
-      bg-login-normal login-text-on-dark border border-main
-      hover:bg-login-hover hover:text-gray-400
-      active:bg-login-active
-      disabled:bg-login-disabled disabled:text-gray-600
+      bg-dark-900 border border-main text-main
+      hover:bg-main-shade hover:text-gray-400 
+      active:bg-gray-600 active: border-main-shade
+      disabled:bg-login-disabled disabled:text-gray-600 disabled:brightness-50 disabled:border-dark-900 disabled:pointer-events-none
     `,
     secondary: `
-      bg-login-secondary-normal text-login-text-on-white border border-login-stroke
-      hover:bg-login-secondery-hover
+      bg-login-secondary-normal
+      hover:bg-gray-600
+      active:bg-gray-500 active:text-dark-900
+      disabled:brightness-50 disabled:pointer-events-none
     `,
   };
   
