@@ -55,7 +55,7 @@ export default function Post() {
   
     return (
       <main className="min-h-[calc(100svh-180px)] md:h-svh  px-5 py-5 md:px-26">
-        <div className='max-w-5xl mx-auto'>
+        <div className='max-w-2xl mx-auto'>
           <PageHeader
             showBack={false} 
             showDropdown={false}
@@ -263,7 +263,7 @@ export default function Post() {
             >
               저장
             </button> */}
-            <div className='flex flex-row gap-2'>
+            <div className='w-full flex flex-row gap-2'>
                 <Button
                 text="로그아웃"
                 beforeIcon={ <BoxArrowRight />}

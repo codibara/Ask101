@@ -26,10 +26,10 @@ const IconButton = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary',
       disabled:bg-login-disabled disabled:text-gray-600 disabled:brightness-50 disabled:border-dark-900 disabled:pointer-events-none
     `,
     secondary: `
-      bg-login-secondary-normal
+      bg-login-secondary-normal text-gray-400
       hover:bg-gray-600
       active:bg-gray-500 active:text-dark-900
-      disabled:brightness-50 disabled:pointer-events-none
+      disabled:bg-dark-900 disabled:text-gray-600 disabled:pointer-events-none
     `,
   };
   

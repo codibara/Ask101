@@ -57,7 +57,7 @@ export default function Navigation() {
                     onClick={() => router.push('/')}
                     variant="secondary"
                     isGoogle={false}
-                    disabled={true}
+                    disabled={false}
                   />
               </div>
               )}

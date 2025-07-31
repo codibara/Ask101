@@ -15,7 +15,7 @@ interface ButtonProp{
 
 const Button = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary', disabled = false, isLink = false, href = "#", isLoading = false}: ButtonProp) => {
   const baseClasses = `
-    w-full md:max-w-[280px] h-[46px] flex flex-row justify-center items-center gap-2
+    w-full h-[46px] flex flex-row justify-center items-center gap-2
     font-semibold transition duration-100 cursor-pointer
     disabled:cursor-not-allowed
   `;
