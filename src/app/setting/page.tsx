@@ -207,7 +207,9 @@ export default function Post() {
               </p>
               <div className='w-32 relative'>
                 <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={4}
                     className='w-full px-3 py-1 focus:outline-none rounded-full bg-dark-900 focus:ring-1 focus:ring-main focus:text-main focus:bg-dark-950 no-spinner'
                     name="출생연도"
                     value={userBirthYear}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChatLeftText, Eye, ArrowUpSquareFill, ExclamationTriangle } from 'react-bootstrap-icons';
 
 import { Post } from "@/types/post";
@@ -20,6 +21,9 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [commentInput, setCommentInput] = useState('');
   const [selectedOption, setSelectedOption] = useState<'A' | 'B' | null>(null);
+  const [isAnyReplyOpen, setIsAnyReplyOpen] = useState(false);
+
+  const router = useRouter();
 
   const handleOptionSelect = (option: 'A' | 'B') => {
     setSelectedOption(prev => (prev === option ? null : option));
@@ -66,8 +70,12 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
 
   return (
     <main className="min-h-svh px-5 py-5 md:px-26 mb-[72px] md:mb-0">
-      <div className='max-w-5xl mx-auto'>
-        <PageHeader onDeleteClick={() => setModalOpen(true)} title='게시물'/>
+      <div className='max-w-2xl mx-auto'>
+        <PageHeader 
+          onEditClick={() => (router.push(`/post/${postId}/edit`))}
+          onDeleteClick={() => setModalOpen(true)} 
+          title='게시물'
+        />
         {/* Post Details */}
         <div className="flex flex-col items-start gap-4 my-5">
           <div className="w-full">
@@ -110,24 +118,26 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
             <p>댓글 {comments.length}</p>
           </div>
           {/* Comment Input (Fixed to bottom)*/}
-          <div className='fixed bottom-[72px] left-0 md:hidden md:bottom-0 w-full gap-2 px-5 py-2 bg-dark-950 '>
-            <div className='flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 py-1'>
-              <input
-                id="title"
-                type="text"
-                className="w-full px-2 bg-dark-900 rounded-md focus:outline-none "
-                placeholder="댓글을 입력하세요"
-                value={commentInput}
-                onChange={handleInputChange}
-              />
-              <Button
-                beforeIcon={<ChatLeftText size={16} color='#B19DFF'/>}
-                variant='tertiary'
-                disabled={false}
-                isLink={false}
-              />
+          {!isAnyReplyOpen && (
+            <div className='fixed bottom-[88px] left-0 md:hidden md:bottom-0 w-full gap-2 px-5 py-2 bg-dark-950 '>
+              <div className='flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 py-1'>
+                <input
+                  id="title"
+                  type="text"
+                  className="w-full px-2 bg-dark-900 rounded-md focus:outline-none "
+                  placeholder="댓글을 입력하세요"
+                  value={commentInput}
+                  onChange={handleInputChange}
+                />
+                <Button
+                  beforeIcon={<ChatLeftText size={16} color='#B19DFF' />}
+                  variant='tertiary'
+                  disabled={false}
+                  isLink={false}
+                />
+              </div>
             </div>
-          </div>
+          )}
           {/* Comment Input Desktop*/}
           <div className='hidden w-full md:block bg-dark-950'>
             <div className='flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 py-1'>
@@ -156,6 +166,8 @@ export default function PostDetail({ params }: { params: { postId: string } }) {
                 userId={c.userId}
                 comment={c.comment}
                 commentId={c.commentId}
+                setIsAnyReplyOpen={setIsAnyReplyOpen}
+                isAnyReplyOpen={isAnyReplyOpen}
               />
             ))
           ) : (

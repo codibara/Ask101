@@ -7,11 +7,14 @@ import Pill from "@/app/component/ui/pill";
 import { ChatLeftText } from 'react-bootstrap-icons';
 import Button from './button';
 
-import { use, useState } from 'react';
+import { use, useState, useEffect } from 'react';
 
-interface CommentProp extends Comment {}
+interface CommentProp extends Comment {
+  setIsAnyReplyOpen: (open: boolean) => void;
+  isAnyReplyOpen: boolean;
+}
 
-const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
+const CommentItem = ({ postId, userId, commentId, comment, setIsAnyReplyOpen, isAnyReplyOpen }: CommentProp) => {
 
   const user = mockUsers.find((u) => u.userId === userId);
   const replies = mockReplies.filter((r) => r.commentId === commentId);
@@ -24,9 +27,14 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
     setIsOpen(prev => !prev);
   }
 
+  //toggle replay input
   const handleReplyInput = () => {
     setIsReplyOpen(prev => !prev);
-  }
+  };
+
+  useEffect(() => {
+    setIsAnyReplyOpen(isReplyOpen);
+  }, [isReplyOpen]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentInput(e.target.value);
@@ -63,12 +71,13 @@ const CommentItem = ({ postId, userId, commentId, comment }: CommentProp) => {
                   </div>
               </div>
             </div>
+            {/*Reply Input*/}
             <div className={`${isReplyOpen ? 'block' : 'hidden'} w-full bg-dark-950`}>
               <div className='flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 mb-1'>
                 <input
                   id="title"
                   type="text"
-                  className="w-full px-2 text-sm bg-dark-900 rounded-md focus:outline-none "
+                  className="w-full px-2 bg-dark-900 rounded-md focus:outline-none "
                   placeholder="답글을 입력하세요"
                   value={commentInput}
                   onChange={handleInputChange}
