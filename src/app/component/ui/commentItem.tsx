@@ -62,12 +62,12 @@ const CommentItem = ({ postId, userId, commentId, comment, setIsAnyReplyOpen, is
               <div 
                 className="flex flex-row gap-2 cursor-pointer items-center" 
               >
-                  <div className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-50" onClick={handleReplyInput}>
-                      <p className="text-xs font-medium underline -mt-1">답글달기</p>
+                  <div className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-125" onClick={handleReplyInput}>
+                      <p className="text-sm font-medium">답글달기</p>
                   </div>
-                  <div className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-50" onClick={handleReplyList}>
+                  <div className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-125" onClick={handleReplyList}>
                       <ChatLeftText size={16} />
-                      <p className="text-xs font-medium underline -mt-1">{replies.length}</p>
+                      <p className="text-xs font-medium underline -mt-1 underline-offset-1">{replies.length}</p>
                   </div>
               </div>
             </div>

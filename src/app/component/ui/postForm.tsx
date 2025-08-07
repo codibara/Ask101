@@ -83,20 +83,32 @@ export default function PostForm({
           <div className="flex-grow">
             <p className="block text-sm font-medium mb-2">투표 옵션 설정</p>
             <div className="flex flex-col md:flex-row gap-2 md:gap-4">
-              <input
-                type="text"
-                className="px-4 py-2 md:flex-1/2 bg-dark-900 rounded-md focus:outline-none"
-                placeholder="옵션 A"
-                value={optionA}
-                onChange={(e) => setOptionA(e.target.value)}
-              />
-              <input
-                type="text"
-                className="px-4 py-2 md:flex-1/2 bg-dark-900 rounded-md focus:outline-none"
-                placeholder="옵션 B"
-                value={optionB}
-                onChange={(e) => setOptionB(e.target.value)}
-              />
+              <div className='w-full relative'>
+                <input
+                  type="text"
+                  className="w-full px-4 py-2 md:flex-1/2 bg-dark-900 rounded-md focus:outline-none"
+                  placeholder="옵션 A"
+                  value={optionA}
+                  maxLength={11}
+                  onChange={(e) => setOptionA(e.target.value)}
+                />
+                <div className="absolute right-3 bottom-3 text-xs text-gray-500">
+                  {optionA.length}/11자
+                </div>
+              </div>
+              <div className='w-full relative'>
+                <input
+                  type="text"
+                  className="w-full px-4 py-2 md:flex-1/2 bg-dark-900 rounded-md focus:outline-none"
+                  placeholder="옵션 B"
+                  value={optionB}
+                  maxLength={11}
+                  onChange={(e) => setOptionB(e.target.value)}
+                />
+                <div className="absolute right-3 bottom-3 text-xs text-gray-500">
+                  {optionB.length}/11자
+                </div>
+              </div>
             </div>
           </div>
           {/* Button */}

@@ -3,6 +3,7 @@
 import Dropdown from '@/app/component/ui/dropdown';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Trash3, Pencil } from 'react-bootstrap-icons';
+import Button from '../ui/button';
 
 type PageHeaderProps = {
   onEditClick?: () => void;
@@ -34,9 +35,9 @@ export default function PageHeader({ onDeleteClick, onEditClick, title, postId, 
 
   return (
     <div className="relative flex flex-row justify-between items-center mb-5">
-        <p className='absolute top-1/2 left-1/2 -translate-1/2'>{title}</p>
+      <p className='absolute top-1/2 left-1/2 -translate-1/2'>{title}</p>
       <div className='min-w-[40px] h-10 flex flex-row items-center'>
-        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1 cursor-pointer">
+        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
           <ChevronLeft />
           돌아가기
         </button>}

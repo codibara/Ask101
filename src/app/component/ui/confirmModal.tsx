@@ -41,7 +41,7 @@ export default function ConfirmModal({
         {icon}
         <h2 className="text-base font-semibold mt-1">{title}</h2>
         <p className="mt-1 text-base">{message}</p>
-        <div className="mt-6 flex flex-row gap-2 w-full md:max-w-[260px]">
+        <div className="mt-6 flex flex-row gap-2 w-full md:max-w-[280px]">
           <Button 
             text={secondaryText}
             onClick={onClose}

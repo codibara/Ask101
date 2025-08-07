@@ -9,7 +9,7 @@ export const posts: Post[] = [
     postDate: "2025-04-21",
     commentCount: 18,
     viewCount: 113,
-    optionA: "퇴사한다",
+    optionA: "사직서 내고당장퇴사한",
     optionB: "말 안 한다"
   },
   {
