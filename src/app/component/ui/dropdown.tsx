@@ -22,6 +22,7 @@ export default function Dropdown({ options, onSelect, placeholder = 'Select...' 
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<Option | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isOptionDisabled, setIsOptiondisabled] = useState(false);
 
   const handleSelect = (option: Option) => {
     setSelected(option);
@@ -53,21 +54,22 @@ export default function Dropdown({ options, onSelect, placeholder = 'Select...' 
       />
 
       {isOpen && (
-        <ul className="absolute z-10 right-0 top-11 bg-dark-900 rounded-lg w-[130px] shadow">
+        <div className="absolute z-10 right-0 top-11 bg-dark-900 rounded-lg w-[130px] shadow overflow-hidden">
           {options.map((option) => (
-            <li
+            <button
               key={option.value}
               onClick={(e) => {
                 e.stopPropagation(); // prevent dropdown from closing early
                 handleSelect(option);
               }}
-              className="px-4 py-2 flex flex-row gap-2 items-center hover:bg-gray-600 cursor-pointer"
+              disabled={isOptionDisabled ? true : false}
+              className={`w-full px-4 py-2 flex flex-row gap-2 items-center hover:bg-gray-600  ${isOptionDisabled ? "cursor-not-allowed brightness-50 hover:bg-transparent" : "cursor-pointer" }`}
             >
               {option.icon && <span>{option.icon}</span>}
               <span>{option.label}</span>
-            </li>
+            </button>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

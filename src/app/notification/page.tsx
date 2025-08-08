@@ -17,7 +17,7 @@ export default function NotificationList() {
 
   return (
     <main className="min-h-svh px-5 py-5 md:px-26">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <PageHeader title="알림" showBack={false} showDropdown={false} />
 
         <div className="w-full flex flex-row items-center justify-center mb-5">

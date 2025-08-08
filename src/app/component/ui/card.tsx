@@ -13,7 +13,7 @@ const Card = ({ postId, title, body, userId, postDate, commentCount, viewCount, 
     const { gender, mbti, age, occupation } = user.userCategory;
 
     return(
-        <Link href={`/post/${postId}`} className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full md:max-w-[48%] border border-dark-900 hover:bg-neutral-800 active:bg-neutral-700">
+        <Link href={`/post/${postId}`} className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full border border-dark-900 hover:bg-neutral-800 active:bg-neutral-700">
         
         <div className="flex flex-col items-start gap-4">
             <div className='w-[100%]'>

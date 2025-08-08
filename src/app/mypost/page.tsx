@@ -9,7 +9,7 @@ export default function MyPost() {
   return (
     <div className="bg-background">
       <main className="min-h-svh px-5 py-5 md:px-26">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-2xl mx-auto">
           <PageHeader title="내 게시물" showBack={false} showDropdown={false} />
           <div className="max-w-5xl mx-auto flex flex-row flex-wrap gap-4">
           {posts.map((post: Post, index: number ) => (

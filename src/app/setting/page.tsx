@@ -1,23 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import {
-  QuestionCircle,
-  BoxArrowRight,
-  CheckCircle,
-  Check,
-  Download,
-  Flag,
-} from "react-bootstrap-icons";
+import { BoxArrowRight, CheckCircle, Download } from "react-bootstrap-icons";
 
 import PageHeader from "@/app/component/shared/pageHeader";
 import ConfirmModal from "../component/ui/confirmModal";
 import Button from "@/app/component/ui/button";
 
 export default function Post() {
-  const router = useRouter();
   const errorMessage = "사용불가능한 닉네임 입니다.";
 
   const [userNickName, setUserNickName] = useState("");

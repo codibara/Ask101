@@ -37,8 +37,10 @@ export default function PostDetail({ params }: { params: { announceId: string } 
         <div className="flex flex-col items-start gap-4 my-5">
           <div className="w-full">
             <h1 className="text-2xl font-bold mb-1.5">{title}</h1>
+            <p className="text-sm">{date}</p>
           </div>
           <p className="text-base">{content}</p>
+          
         </div>
       </div>
     </main>

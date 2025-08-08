@@ -1,18 +1,20 @@
 'use client';
 
 import Dropdown from '@/app/component/ui/dropdown';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Trash3, Pencil } from 'react-bootstrap-icons';
+import Button from '../ui/button';
 
 type PageHeaderProps = {
+  onEditClick?: () => void;
   onDeleteClick?: () => void;
   showDropdown?: boolean; 
   title: string;
-  showBack?:boolean
+  showBack?:boolean;
+  postId?: number;
 };
 
-export default function PageHeader({ onDeleteClick, title, showDropdown = true, showBack = true }: PageHeaderProps) {
+export default function PageHeader({ onDeleteClick, onEditClick, title, postId, showDropdown = true, showBack = true }: PageHeaderProps) {
   const router = useRouter();
 
   const options = [
@@ -23,20 +25,23 @@ export default function PageHeader({ onDeleteClick, title, showDropdown = true, 
   const handleSelect = (value: string) => {
     if (value === 'delete') {
       onDeleteClick?.();
-    } else {
+    } else if(value === 'edit'){
+      onEditClick?.();
+    }
+    else {
       console.log('Selected:', value);
     }
   };
 
   return (
-    <div className="flex flex-row justify-between items-center mb-5">
+    <div className="relative flex flex-row justify-between items-center mb-5">
+      <p className='absolute top-1/2 left-1/2 -translate-1/2'>{title}</p>
       <div className='min-w-[40px] h-10 flex flex-row items-center'>
-        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1 cursor-pointer">
+        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
           <ChevronLeft />
           돌아가기
         </button>}
       </div>
-      <p>{title}</p>
       <div className='w-10 h-10 flex flex-row items-center justify-center'>
       {showDropdown && (
         <Dropdown options={options} onSelect={handleSelect} />

@@ -14,7 +14,7 @@ export default function Home() {
             <li className="text-[16px] py-2 px-9">완료됨</li>
           </ul>
         </div>
-        <div className="max-w-5xl mx-auto flex flex-row flex-wrap gap-4">
+        <div className="max-w-2xl mx-auto flex flex-row flex-wrap gap-4">
         {posts.map((post: Post, index: number ) => (
           <Card
             key={index}
