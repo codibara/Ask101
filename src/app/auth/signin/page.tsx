@@ -20,7 +20,7 @@ export default function SignIn() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      await signIn("google", { callbackUrl: "/" });
+      await signIn("google", { callbackUrl: "/auth/redirect" });
     } catch (error) {
       console.error("Sign in error:", error);
       setIsLoading(false);

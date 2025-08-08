@@ -39,7 +39,7 @@ export const Job = pgEnum("job", [
   "전문직",
   "기타",
 ]);
-export const Vote = pgEnum("vote", ["yes", "no"]);
+export const Vote = pgEnum("vote", ["A", "B"]);
 
 // NextAuth.js required tables
 export const accounts = pgTable("accounts", {
@@ -96,13 +96,16 @@ export const users = pgTable("users", {
 // Posts table for voting
 export const posts = pgTable("posts", {
   id: serial("id").primaryKey(), // Auto-incremented post ID
-  title: varchar("title", { length: 255 }).notNull(), // Post title
-  content: text("content").notNull(), // The question/content being asked
+  title: varchar("title", { length: 35 }).notNull(), // Post title
+  content: varchar("content", { length: 300 }).notNull(), // The question/content being asked
   authorId: integer("author_id")
     .references(() => users.id)
     .notNull(), // Foreign key to users table - who created the post
-  yesVotes: integer("yes_votes").notNull().default(0), // Number of "yes" votes
-  noVotes: integer("no_votes").notNull().default(0), // Number of "no" votes
+  optionA: varchar("option_a", { length: 11 }).notNull(), // Text for option A
+  optionB: varchar("option_b", { length: 11 }).notNull(), // Text for option B
+  votesA: integer("votes_a").notNull().default(0), // Number of votes for option A
+  votesB: integer("votes_b").notNull().default(0), // Number of votes for option B
+  isEndVote: boolean("is_end_vote").notNull().default(false), // Auto-end when total votes reach 101
   endedAt: timestamp("ended_at", { mode: "date" }), // Time when voting ended
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // Time when the post was created
 });
@@ -133,7 +136,7 @@ export const votes = pgTable(
     postId: integer("post_id")
       .references(() => posts.id)
       .notNull(), // Foreign key to posts table
-    vote: Vote().notNull(), // The user's vote (enum: 'yes', 'no')
+    vote: Vote().notNull(), // The user's vote (enum: 'A', 'B')
     createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // When the vote was cast
   },
   (table) => ({

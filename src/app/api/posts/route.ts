@@ -30,16 +30,19 @@ export async function POST(request: Request) {
       .values({
         title: body.title,
         content: body.content,
-        participants: body.participants,
-        yesVotes: body.yesVotes,
-        noVotes: body.noVotes,
-        isPostEnded: body.isPostEnded,
+        authorId: body.authorId,
+        optionA: body.optionA,
+        optionB: body.optionB,
+        votesA: body.votesA ?? 0,
+        votesB: body.votesB ?? 0,
+        isEndVote: body.isEndVote ?? false,
         endedAt: body.endedAt, // expects a valid timestamp string
         // createdAt will default via schema if not provided
       })
       .returning();
     return NextResponse.json(newPost[0], { status: 201 });
   } catch (error) {
+    console.error("Error creating post:", error);
     return NextResponse.json(
       { error: "Failed to create post" },
       { status: 500 }
@@ -62,10 +65,12 @@ export async function PUT(request: Request) {
       .set({
         title: body.title,
         content: body.content,
-        participants: body.participants,
-        yesVotes: body.yesVotes,
-        noVotes: body.noVotes,
-        isPostEnded: body.isPostEnded,
+        authorId: body.authorId,
+        optionA: body.optionA,
+        optionB: body.optionB,
+        votesA: body.votesA,
+        votesB: body.votesB,
+        isEndVote: body.isEndVote,
         endedAt: body.endedAt,
       })
       .where(eq(posts.id, id))
@@ -75,6 +80,7 @@ export async function PUT(request: Request) {
     }
     return NextResponse.json(updatedPost[0]);
   } catch (error) {
+    console.error("Error updating post:", error);
     return NextResponse.json(
       { error: "Failed to update post" },
       { status: 500 }

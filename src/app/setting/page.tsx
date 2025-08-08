@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { BoxArrowRight, CheckCircle, Download } from "react-bootstrap-icons";
 
 import PageHeader from "@/app/component/shared/pageHeader";
@@ -9,6 +10,8 @@ import ConfirmModal from "../component/ui/confirmModal";
 import Button from "@/app/component/ui/button";
 
 export default function Post() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const errorMessage = "사용불가능한 닉네임 입니다.";
 
   const [userNickName, setUserNickName] = useState("");
@@ -23,6 +26,66 @@ export default function Post() {
   const [selectedOccupation, setSelectedOccupation] = useState("");
   const [customOccupation, setCustomOccupation] = useState("");
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load user data on component mount
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (status === "loading") return;
+
+      if (!session?.user?.id) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/user/profile");
+        if (response.ok) {
+          const userData = await response.json();
+
+          // Set form data from loaded user data
+          setUserNickName(userData.displayName || "");
+
+          // Map database gender values to display values
+          const genderMapping: { [key: string]: string } = {
+            male: "male",
+            female: "female",
+          };
+          setSelectedGender(genderMapping[userData.sex] || "");
+
+          setUserBirthYear(userData.birthYear?.toString() || "");
+
+          // Handle job and custom job loading
+          if (userData.customJob && userData.customJob.trim() !== "") {
+            // If there's a custom job, set job to "기타" and custom job to the value
+            setSelectedOccupation("기타");
+            setCustomOccupation(userData.customJob);
+          } else {
+            // If no custom job, use the regular job value
+            setSelectedOccupation(userData.job || "");
+            setCustomOccupation("");
+          }
+
+          // Parse MBTI if available
+          if (userData.mbti && userData.mbti.length === 4) {
+            setSelectedMBTI({
+              ei: userData.mbti[0],
+              sn: userData.mbti[1],
+              tf: userData.mbti[2],
+              jp: userData.mbti[3],
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, [session, status, router]);
 
   const handleUserNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserNickName(e.target.value);
@@ -33,10 +96,61 @@ export default function Post() {
     setUserBirthYear(onlyNums);
   };
 
-  const handleSave = () => {
-    console.log("Saved!");
-    // Add delete API logic here
-    setModalOpen(true);
+  const handleSave = async () => {
+    if (!userNickName.trim()) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      // Combine MBTI parts into a single string
+      let mbtiValue = null;
+      if (
+        selectedMBTI.ei &&
+        selectedMBTI.sn &&
+        selectedMBTI.tf &&
+        selectedMBTI.jp
+      ) {
+        mbtiValue = `${selectedMBTI.ei}${selectedMBTI.sn}${selectedMBTI.tf}${selectedMBTI.jp}`;
+        console.log("Combined MBTI:", mbtiValue); // Debug log
+      }
+
+      const requestData = {
+        displayName: userNickName,
+        sex: selectedGender || null,
+        birthYear: userBirthYear ? parseInt(userBirthYear) : null,
+        mbti: mbtiValue,
+        job: selectedOccupation || null,
+        customJob: customOccupation || null,
+      };
+
+      console.log("Sending data to API:", requestData);
+
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        setModalOpen(true);
+        // After successful save, redirect to home
+        setTimeout(() => {
+          router.push("/");
+        }, 1500);
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || "저장 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("저장 중 오류가 발생했습니다.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleLogout = async () => {
@@ -56,6 +170,23 @@ export default function Post() {
       [key]: prev[key] === value ? "" : value,
     }));
   };
+
+  // Show loading state while fetching user data
+  if (isLoading || status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">프로필을 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated
+  if (!session?.user?.id) {
+    return null;
+  }
 
   return (
     <main className="min-h-[calc(100svh-180px)] md:h-svh  px-5 py-5 md:px-26">
@@ -89,27 +220,27 @@ export default function Post() {
                 type="button"
                 className={`px-3 py-1 rounded-full focus:outline-none 
                     ${
-                      selectedGender === "여자"
+                      selectedGender === "female"
                         ? "bg-gray-600"
                         : "bg-dark-900 text-gray-600"
                     }
                   `}
                 name="여자"
                 value="여자"
-                onClick={() => handleGenderSelect("여자")}
+                onClick={() => handleGenderSelect("female")}
               />
               <input
                 type="button"
                 className={`px-3 py-1 rounded-full focus:outline-none 
                     ${
-                      selectedGender === "남자"
+                      selectedGender === "male"
                         ? "bg-gray-600"
                         : "bg-dark-900 text-gray-600"
                     }
                   `}
                 name="남자"
                 value="남자"
-                onClick={() => handleGenderSelect("남자")}
+                onClick={() => handleGenderSelect("male")}
               />
             </div>
           </div>
@@ -308,11 +439,12 @@ export default function Post() {
               isLink={false}
             />
             <Button
-              text="저장하기"
+              text={isSaving ? "저장 중..." : "저장하기"}
               beforeIcon={<Download />}
               onClick={handleSave}
               variant="primary"
               isLink={false}
+              disabled={isSaving}
             />
           </div>
         </div>

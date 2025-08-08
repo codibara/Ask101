@@ -25,6 +25,10 @@ export const authOptions = {
     async session({ session, user, token }) {
       if (session.user) {
         session.user.id = user?.id || token?.sub;
+        // Add displayName to session for easy access
+        if (user) {
+          session.user.displayName = user.displayName;
+        }
       }
       return session;
     },
