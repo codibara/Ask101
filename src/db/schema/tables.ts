@@ -30,6 +30,15 @@ export const Mbti = pgEnum("mbti", [
   "ESTP",
   "ESFP",
 ]);
+export const Job = pgEnum("job", [
+  "중고등학생",
+  "대학/대학원생",
+  "취준생",
+  "직장인",
+  "자영업",
+  "전문직",
+  "기타",
+]);
 export const Vote = pgEnum("vote", ["yes", "no"]);
 
 // NextAuth.js required tables
@@ -65,11 +74,7 @@ export const verificationTokens = pgTable("verification_token", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-// Roles table: Admin or user roles
-export const roles = pgTable("roles", {
-  id: serial("id").primaryKey(), // Role ID (auto-increment)
-  name: varchar("name", { length: 50 }).notNull(), // Role name (admin/user)
-});
+// Removed roles table - using isAdmin boolean in users table instead
 
 // Users table - Updated to work with NextAuth.js
 export const users = pgTable("users", {
@@ -77,24 +82,15 @@ export const users = pgTable("users", {
   name: varchar("name", { length: 255 }), // User's name (from OAuth)
   email: varchar("email", { length: 255 }).unique(), // Email (from OAuth)
   emailVerified: timestamp("email_verified", { mode: "date" }), // Email verification
-  image: varchar("image", { length: 255 }), // Profile image (from OAuth)
   displayName: varchar("display_name", { length: 255 }), // User's display name (nullable)
-  sex: text("sex").$type<typeof Sex>(), // Gender as enum (nullable)
-  age: integer("age"), // Age as integer (nullable)
-  mbti: text("mbti").$type<typeof Mbti>(), // MBTI enum column (nullable)
+  sex: Sex(), // Gender as enum (nullable)
+  birthYear: integer("birth_year"), // Birth year as integer (nullable)
+  mbti: Mbti(), // MBTI enum column (nullable)
+  job: Job(), // Job/occupation as enum (nullable)
+  customJob: varchar("custom_job", { length: 10 }), // Custom job input (max 10 chars, nullable)
   isNotificationOn: boolean("is_notification_on").notNull().default(false), // Toggle for notifications
-  role: integer("role")
-    .references(() => roles.id)
-    .notNull()
-    .default(2), // Foreign key to roles table, default to user role
-  post: integer("post")
-    .array()
-    .notNull()
-    .default(sql`'{}'::integer[]`), // Array of post IDs with empty array default
-  savedPosts: integer("saved_posts")
-    .array()
-    .notNull()
-    .default(sql`'{}'::integer[]`), // Array of saved post IDs with empty array default
+  onboardingCompleted: boolean("onboarding_completed").notNull().default(false), // Track if onboarding is done
+  isAdmin: boolean("is_admin").notNull().default(false), // Admin privileges (simple boolean)
 });
 
 // Posts table for voting
@@ -102,15 +98,16 @@ export const posts = pgTable("posts", {
   id: serial("id").primaryKey(), // Auto-incremented post ID
   title: varchar("title", { length: 255 }).notNull(), // Post title
   content: text("content").notNull(), // The question/content being asked
-  participants: integer("participants").notNull(), // Number of users who participated
-  yesVotes: integer("yes_votes").notNull(), // Number of "yes" votes
-  noVotes: integer("no_votes").notNull(), // Number of "no" votes
-  isPostEnded: boolean("is_post_ended").notNull(), // Toggle if the vote has ended
+  authorId: integer("author_id")
+    .references(() => users.id)
+    .notNull(), // Foreign key to users table - who created the post
+  yesVotes: integer("yes_votes").notNull().default(0), // Number of "yes" votes
+  noVotes: integer("no_votes").notNull().default(0), // Number of "no" votes
   endedAt: timestamp("ended_at", { mode: "date" }), // Time when voting ended
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // Time when the post was created
 });
 
-// Reply table (for post replies)
+// Reply table (for post replies and reply-to-reply, max 2 levels)
 export const reply = pgTable("reply", {
   id: serial("id").primaryKey(), // Auto-incremented reply ID
   reply: text("reply").notNull(), // The reply content
@@ -119,20 +116,47 @@ export const reply = pgTable("reply", {
     .notNull(), // Foreign key to users table
   postId: integer("post_id")
     .references(() => posts.id)
-    .notNull(), // Foreign key to posts table
+    .notNull(), // Foreign key to posts table - all replies belong to a post
+  parentReplyId: integer("parent_reply_id"), // NULL = direct reply to post, NOT NULL = reply to another reply
   isDeleted: boolean("is_deleted").notNull().default(false), // Flag to indicate if the reply is deleted
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // Time when the reply was created
 });
 
 // Votes table
-export const votes = pgTable("votes", {
-  id: serial("id").primaryKey(), // Auto-incremented vote ID
-  userId: integer("user_id")
-    .references(() => users.id)
-    .notNull(), // Foreign key to users table
-  postId: integer("post_id")
-    .references(() => posts.id)
-    .notNull(), // Foreign key to posts table
-  vote: text("vote").$type<typeof Vote>().notNull(), // The user's vote (enum: 'yes', 'no')
-  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // When the vote was cast
-});
+export const votes = pgTable(
+  "votes",
+  {
+    id: serial("id").primaryKey(), // Auto-incremented vote ID
+    userId: integer("user_id")
+      .references(() => users.id)
+      .notNull(), // Foreign key to users table
+    postId: integer("post_id")
+      .references(() => posts.id)
+      .notNull(), // Foreign key to posts table
+    vote: Vote().notNull(), // The user's vote (enum: 'yes', 'no')
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // When the vote was cast
+  },
+  (table) => ({
+    // Unique constraint: one vote per user per post
+    uniqueUserPost: sql`UNIQUE(${table.userId}, ${table.postId})`,
+  })
+);
+
+// Saved posts table (for bookmarking debates)
+export const savedPosts = pgTable(
+  "saved_posts",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .references(() => users.id)
+      .notNull(),
+    postId: integer("post_id")
+      .references(() => posts.id)
+      .notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => ({
+    // Unique constraint: one save per user per post
+    uniqueUserPost: sql`UNIQUE(${table.userId}, ${table.postId})`,
+  })
+);
