@@ -4,10 +4,11 @@ import PageHeader from '@/app/component/shared/pageHeader';
 export default async function PostDetail({
   params,
 }: {
-  params: { announceId: string };
+  params: Promise<{ announceId: string }>;
 }) {
-  const announceId = parseInt(params.announceId, 10);
-  const announce = await getAnnounceById(announceId);
+  // ✅ Await params
+  const { announceId } = await params;
+  const announce = await getAnnounceById(parseInt(announceId, 10));
 
   if (!announce) {
     return <div className="p-10 text-red-500">Post not found</div>;

@@ -1,6 +1,9 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 import NotificationItem from "../component/ui/notificationItem";
 import PageHeader from "@/app/component/shared/pageHeader";
@@ -9,6 +12,15 @@ import { mockNotifications } from "@/data/mock_notification_data";
 
 export default function NotificationList() {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
 
   const filteredNotifications =
     filter === 'all'
