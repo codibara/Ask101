@@ -1,27 +1,28 @@
 export interface Post {
     postId: number;
     title: string;
-    body: string;
-    userId: string;
-    postDate: string;
+    content: string;
+    author_id: number;
     commentCount: number;
     viewCount: number;
-    optionA: string;
-    optionB: string;
-  }
-  
-  export interface UserCategory {
-    gender: string;
-    mbti: string;
-    age: string;
-    occupation: string;
+    option_a: string;
+    option_b: string;
+    votes_a: number;
+    votes_b: number;
+    ended_at?: string | Date;
+    created_at: string | Date;
+    is_end_vote?: boolean | null;
+    author: User;
   }
 
   export interface Comment {
-    commentId: number;
-    postId: number;
-    userId: string;
-    comment: string;
+    id: number;
+    post_id: number;
+    user_id: string;
+    reply: string;
+    parent_reply_id: string | null;
+    is_deleted: boolean;
+    created_at: string | Date;
   }
 
   export interface Reply {
@@ -32,6 +33,13 @@ export interface Post {
   }
 
   export interface User{
-    userId: string;
-    userCategory: UserCategory;
+    userId?: number;
+    name?: string;
+    email?: string;
+    display_name?: string | null;
+    birth_year?: number | null;
+    sex: string | null;
+    mbti: string | null;
+    age?: string | null;
+    job: string | null;
   }

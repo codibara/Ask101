@@ -5,9 +5,10 @@ import LogoMobile from "./component/shared/logoMobile";
 
 import Navigation from "./component/shared/navigation";
 
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Ask101",
+  title: "MinCho",
   description: "Ask questions and get answers from the community",
 };
 

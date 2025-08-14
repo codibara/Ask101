@@ -1,149 +1,144 @@
 "use client";
 
-import { Comment } from "@/types/post";
-import { mockReplies } from "@/data/mock_reply";
-import { mockUsers } from "@/data/mock_user_data";
 import Pill from "@/app/component/ui/pill";
 import { ChatLeftText } from "react-bootstrap-icons";
 import Button from "./button";
+import { useEffect, useState } from "react";
+import type { Comment, User } from "@/types/post";
 
-import { use, useState, useEffect } from "react";
+type ReplyItem = Comment & { author: User };
 
-interface CommentProp extends Comment {
+interface CommentItemProps extends Comment {
+  author: User;
+  isLoggedIn: boolean;
   setIsAnyReplyOpen: (open: boolean) => void;
   isAnyReplyOpen: boolean;
-  isLoggedIn: boolean;
+  replies?: ReplyItem[];
+  onSubmitReply: (parentId: number, text: string) => Promise<void> | void; 
 }
 
 const CommentItem = ({
-  postId,
-  userId,
-  commentId,
-  comment,
+  id,
+  reply,
+  parent_reply_id,
+  is_deleted,
+  created_at,
+  author,
+  isLoggedIn,
   setIsAnyReplyOpen,
   isAnyReplyOpen,
-  isLoggedIn,
-}: CommentProp) => {
-  const user = mockUsers.find((u) => u.userId === userId);
-  const replies = mockReplies.filter((r) => r.commentId === commentId);
-
+  replies = [],
+  onSubmitReply
+}: CommentItemProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [commentInput, setCommentInput] = useState("");
+  const [posting, setPosting] = useState(false);
 
-  const handleReplyList = () => {
-    setIsOpen((prev) => !prev);
-  };
-
-  //toggle replay input
-  const handleReplyInput = () => {
-    setIsReplyOpen((prev) => !prev);
-  };
+  const handleReplyList = () => setIsOpen((prev) => !prev);
+  const handleReplyInput = () => setIsReplyOpen((prev) => !prev);
 
   useEffect(() => {
     setIsAnyReplyOpen(isReplyOpen);
-  }, [isReplyOpen]);
+  }, [isReplyOpen, setIsAnyReplyOpen]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommentInput(e.target.value);
+  const handleReplySend = async () => {
+    if (!onSubmitReply || !commentInput.trim() || posting) return;
+    try {
+      setPosting(true);
+      await onSubmitReply(id, commentInput.trim()); // <-- pass this comment's id
+      setCommentInput("");
+    } finally {
+      setPosting(false);
+    }
   };
 
-  if (!user) return null;
+  const display_name= author.display_name;
+  const pillSex = author?.sex;
+  const pillMbti = author?.mbti;
+  const pillAge = author?.age;
+  const pillJob = author?.job;
 
-  const { gender, mbti, age, occupation } = user.userCategory;
+  const createdAtLabel =
+    created_at instanceof Date
+      ? created_at.toLocaleDateString()
+      : new Date(created_at).toLocaleDateString();
 
   return (
     <div className="flex flex-col gap-3">
+      {/* Top-level comment */}
       <div className="flex flex-col gap-3">
-        <Pill gender={gender} mbti={mbti} age={age} occupation={occupation} />
-        <p>{comment}</p>
+        <Pill sex={pillSex} mbti={pillMbti} age={pillAge} job={pillJob} />
+        <p>{is_deleted ? "관리자에 의해 삭제된 댓글 입니다" : reply}</p>
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-2 -mt-1">
-            <p className="text-sm text-gray-500">{user.userId}</p>
-            <p className="text-sm text-gray-500">2025/01/23</p>
+            <p className="text-sm text-gray-500">{display_name}</p>
+            <p className="text-sm text-gray-500">{createdAtLabel}</p>
           </div>
-          <div className="flex flex-row gap-2 cursor-pointer items-center">
-            {/* Show reply functionality only for logged-in users */}
-            {isLoggedIn && (
-              <>
-                <div
-                  className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-125"
-                  onClick={handleReplyInput}
-                >
-                  <p className="text-sm font-medium">답글달기</p>
-                </div>
-                <div
-                  className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-125"
-                  onClick={handleReplyList}
-                >
-                  <ChatLeftText size={16} />
-                  <p className="text-xs font-medium underline -mt-1 underline-offset-1">
-                    {replies.length}
-                  </p>
-                </div>
-              </>
-            )}
-            {/* Show reply count for non-logged in users but make it non-interactive */}
-            {!isLoggedIn && replies.length > 0 && (
-              <div className="flex flex-row items-center gap-1 text-gray-500">
-                <ChatLeftText size={16} />
-                <p className="text-xs font-medium">{replies.length}</p>
-                <p className="text-xs text-gray-400">(로그인 후 확인)</p>
-              </div>
-            )}
+
+          <div className="flex flex-row gap-2 items-center">
+            {isLoggedIn && <div
+              className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-125 cursor-pointer"
+              onClick={handleReplyInput}
+            >
+              <p className="text-sm font-medium">답글달기</p>
+            </div>}
+            <div
+              className="flex flex-row items-center gap-1 text-gray-500 hover:brightness-125 cursor-pointer"
+              onClick={handleReplyList}
+            >
+              <ChatLeftText size={16} />
+              <p className="text-xs font-medium underline -mt-1 underline-offset-1">
+                {replies.length}
+              </p>
+            </div>
           </div>
         </div>
-        {/*Reply Input - Only show for logged-in users*/}
+
+        {/* Reply input */}
         {isLoggedIn && (
-          <div
-            className={`${isReplyOpen ? "block" : "hidden"} w-full bg-dark-950`}
-          >
+          <div className={`${isReplyOpen ? "block" : "hidden"} w-full bg-dark-950`}>
             <div className="flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 mb-1">
               <input
-                id="title"
                 type="text"
-                className="w-full px-2 bg-dark-900 rounded-md focus:outline-none "
-                placeholder="답글을 입력하세요"
+                className="w-full px-2 bg-dark-900 rounded-md focus:outline-none"
+                placeholder="작성한 댓글은 수정 및 삭제가 불가합니다."
                 value={commentInput}
-                onChange={handleInputChange}
+                onChange={(e) => setCommentInput(e.target.value)}
               />
               <Button
                 beforeIcon={<ChatLeftText size={16} color="#B19DFF" />}
                 variant="tertiary"
                 isLink={false}
+                disabled={!commentInput.trim()}
+                onClick={handleReplySend}
               />
             </div>
           </div>
         )}
       </div>
-      {/* Show replies only for logged-in users */}
-      {isLoggedIn &&
-        replies.map((r) => {
-          const replier = mockUsers.find((u) => u.userId === r.userId);
-          if (!replier) return null;
-          const { gender, mbti, age, occupation } = replier.userCategory;
 
-          return (
-            <div
-              className={`${isOpen ? "flex" : "hidden"} flex-col gap-2 ml-10`}
-              key={r.replyId}
-            >
-              <Pill
-                gender={gender}
-                mbti={mbti}
-                age={age}
-                occupation={occupation}
-              />
-              <p>{r.comment}</p>
-              <div className="flex flex-row gap-2 -mt-1">
-                <p className="text-sm text-gray-500">
-                  {replier ? replier.userId : r.userId}
-                </p>
-                <p className="text-sm text-gray-500">2025/01/23</p>
-              </div>
+      {/* Replies */}
+      {
+        replies.map((r) => {
+        const isDeleted = r.is_deleted;
+        const rDisplay = r.author?.display_name ?? r.user_id;
+        const rPill = r.author;
+        const rDate = r.created_at instanceof Date
+          ? r.created_at.toLocaleDateString()
+          : new Date(r.created_at).toLocaleDateString();
+
+        return (
+          <div className={`${isOpen ? "flex" : "hidden"} flex-col gap-2 ml-10`} key={r.id}>
+            {rPill && <Pill sex={rPill.sex} mbti={rPill.mbti} age={rPill.age} job={rPill.job} />}
+            {isDeleted ? <p>관리자에 의해 삭제된 댓글 입니다.</p> : <p>{r.reply}</p>}
+            <div className="flex flex-row gap-2 -mt-1">
+              <p className="text-sm text-gray-500">{rDisplay}</p>
+              <p className="text-sm text-gray-500">{rDate}</p>
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -6,20 +6,21 @@ import { ChevronLeft, Trash3, Pencil } from 'react-bootstrap-icons';
 import Button from '../ui/button';
 
 type PageHeaderProps = {
-  onEditClick?: () => void;
-  onDeleteClick?: () => void;
+  onEditClick?: () => void | undefined;
+  onDeleteClick?: () => void | undefined;
+  isButtonDisabled?: boolean;
   showDropdown?: boolean; 
   title: string;
-  showBack?:boolean;
+  showBack?: boolean;
   postId?: number;
 };
 
-export default function PageHeader({ onDeleteClick, onEditClick, title, postId, showDropdown = true, showBack = true }: PageHeaderProps) {
+export default function PageHeader({ onDeleteClick, onEditClick, title, postId, showDropdown = true, showBack = true , isButtonDisabled = false}: PageHeaderProps) {
   const router = useRouter();
 
   const options = [
-    { icon: <Pencil />, label: '수정하기', value: 'edit' },
-    { icon: <Trash3 />, label: '삭제하기', value: 'delete' },
+    { icon: <Pencil />, label: '수정하기', value: 'edit', disabled: isButtonDisabled  },
+    { icon: <Trash3 />, label: '삭제하기', value: 'delete', disabled: isButtonDisabled },
   ];
 
   const handleSelect = (value: string) => {
@@ -34,10 +35,15 @@ export default function PageHeader({ onDeleteClick, onEditClick, title, postId, 
   };
 
   return (
-    <div className="relative flex flex-row justify-between items-center mb-5">
+    <div className="relative flex flex-row justify-between items-center mb-2">
       <p className='absolute top-1/2 left-1/2 -translate-1/2'>{title}</p>
       <div className='min-w-[40px] h-10 flex flex-row items-center'>
-        {showBack && <button onClick={() => router.back()} className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
+        {showBack && 
+          <button 
+            onClick={() => {
+              router.push('/'); 
+            }} 
+            className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
           <ChevronLeft />
           돌아가기
         </button>}

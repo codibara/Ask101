@@ -1,36 +1,103 @@
-import Card from "./component/ui/card";
-import { posts } from "@/data/mock_posts_full";
-import { Post } from "@/types/post";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/db";
+import { posts as postsTable, users as usersTable, votes as votesTable, reply as repliesTable } from "@/db/schema/tables";
+import { and, eq, isNull, count } from "drizzle-orm";
+import PostList from "@/app/postList";
 
-export default function Home() {
+export type PostListRow = {
+  post: {
+    id: number;
+    title: string;
+    content: string;
+    author_id: number;
+    created_at: string;            // normalize to string for client
+    option_a: string;
+    option_b: string;
+    votes_a: number;
+    votes_b: number;
+    ended_at: string | null;
+    is_end_vote: boolean | null;       // normalize to string|null
+  };
+  author: {
+    id: number;
+    displayName: string | null;
+    sex: string | null;
+    mbti: string | null;
+    birthYear: number | null;
+    job: string | null;
+    age: string | null;
+  };
+  commentCount: number,
+  userVoteId: number | null;
+};
+
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  const userId = Number(session?.user?.id) || -1;  // or null if not logged in
+  
+  const raw = await db
+    .select({
+      post: {
+        id: postsTable.id,
+        title: postsTable.title,
+        content: postsTable.content,
+        author_id: postsTable.authorId,
+        created_at: postsTable.createdAt,
+        option_a: postsTable.optionA,
+        option_b: postsTable.optionB,
+        votes_a: postsTable.votesA,
+        votes_b: postsTable.votesB,
+        ended_at: postsTable.endedAt,
+        is_end_vote: postsTable.isEndVote
+      },
+      author: {
+        id: usersTable.id,
+        displayName: usersTable.displayName,
+        sex: usersTable.sex,
+        mbti: usersTable.mbti,
+        birthYear: usersTable.birthYear,
+        job: usersTable.job,
+        age: usersTable.age,
+      },
+      commentCount: count(repliesTable.id),
+      userVoteId: votesTable.id // or your subquery as sql<number|null>...
+    })
+    .from(postsTable)
+    .innerJoin(usersTable, eq(postsTable.authorId, usersTable.id))
+    .leftJoin(
+      votesTable,
+      and(eq(votesTable.postId, postsTable.id), eq(votesTable.userId, userId || -1))
+    )
+      .leftJoin(
+        repliesTable,
+        and(
+          eq(repliesTable.postId, postsTable.id),
+          isNull(repliesTable.parentReplyId)
+        )
+      )
+      .groupBy(postsTable.id, usersTable.id, votesTable.id);
+
+  // format date
+  function formatYMD(date: Date | string) {
+    const d = date instanceof Date ? date : new Date(date);
+    return d.toISOString().split("T")[0]; // "YYYY-MM-DD"
+  }
+  
+  const rows: PostListRow[] = raw.map(r => ({
+    post: {
+      ...r.post,
+      created_at: formatYMD(r.post.created_at),
+      ended_at: r.post.ended_at ? formatYMD(r.post.ended_at) : null,
+    },
+    author: r.author,
+    userVoteId: r.userVoteId,
+    commentCount: r.commentCount,
+  }));
 
   return (
-    <div className="bg-background">
-      <main className="px-5 py-5 md:px-26">
-        <div className="w-full flex flex-row items-center justify-center mb-5">
-          <ul className="flex flex-row bg-dark-900 rounded-full">
-            <li className="text-[16px] py-2 px-9 bg-gray-600 rounded-full">진행중</li>
-            <li className="text-[16px] py-2 px-9">참여중</li>
-            <li className="text-[16px] py-2 px-9">완료됨</li>
-          </ul>
-        </div>
-        <div className="max-w-2xl mx-auto flex flex-row flex-wrap gap-4">
-        {posts.map((post: Post, index: number ) => (
-          <Card
-            key={index}
-            postId={post.postId}
-            title={post.title}
-            body={post.body}
-            userId={post.userId}
-            postDate={post.postDate}
-            commentCount={post.commentCount}
-            viewCount={post.viewCount}
-            optionA={post.optionA}
-            optionB={post.optionB}
-          />
-        ))}
-        </div>
-      </main>
-    </div>
+    <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26  md:py-5">
+      <PostList rows={rows} isMyPost={false} />
+    </main>
   );
 }

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import Button from '../ui/button';
 import PageHeader from '../shared/pageHeader';
+import { useRouter } from "next/navigation";
 
 interface PostFormProps {
   initialTitle?: string;
@@ -31,6 +32,7 @@ export default function PostForm({
   formTitle = '새 게시물',
   isEdit = false
 }: PostFormProps) {
+  const router = useRouter();
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
   const [optionA, setOptionA] = useState(initialOptionA);
@@ -43,18 +45,23 @@ export default function PostForm({
     setOptionB(initialOptionB);
   }, [initialTitle, initialContent, initialOptionA, initialOptionB]);
 
+  const isFormValid =
+  title.trim().length > 0 &&
+  optionA.trim().length > 0 &&
+  optionB.trim().length > 0;
+
   const handleSubmit = () => {
     onSubmit({ title, content, optionA, optionB });
   };
 
+
   return (
-    <main className="px-5 py-5 md:px-26">
+    <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26 md:py-5">
       <div className="max-w-2xl mx-auto">
-        <PageHeader showBack={isEdit ? true : false} showDropdown={false} title={formTitle}/>
-        
-        <div className="flex flex-col gap-6 h-full min-h-[calc(100svh-240px)] md:min-h-[calc(100svh-100px)]">
+      <PageHeader showBack={false} showDropdown={false} title={formTitle}/>
+        <div className="flex flex-col gap-6 h-full min-h-[calc(100svh-210px)] md:min-h-[calc(100svh-100px)]">
           {/* Title */}
-          <div className="w-full flex flex-row gap-2 py-2 rounded-md items-center">
+          <div className="w-full flex flex-row gap-2 items-center">
             <TextareaAutosize
               value={title}
               maxLength={35}
@@ -112,13 +119,23 @@ export default function PostForm({
             </div>
           </div>
           {/* Button */}
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row gap-2">
+          {isEdit &&
+            <Button
+              text="취소하기"
+              variant="secondary"
+              onClick={()=> router.back()}
+              isLink={false}
+              isLoading={isSubmitting}
+              disabled={isSubmitting || !isFormValid}
+            />}
             <Button
               text={isEdit ? "저장하기" : "투표 시작" }
               variant="primary"
               onClick={handleSubmit}
               isLink={false}
               isLoading={isSubmitting}
+              disabled={isSubmitting || !isFormValid}
             />
           </div>
         </div>

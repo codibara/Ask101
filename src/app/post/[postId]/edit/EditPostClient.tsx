@@ -30,14 +30,14 @@ export default function EditPostClient({
   }) => {
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/posts/${postId}`, {
+      const res = await fetch(`/api/posts?id=${postId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
       if (res.ok) {
-        router.push(`/post/${postId}`);
+        router.push(`/mypost`);
       } else {
         console.error('Failed to update post');
       }

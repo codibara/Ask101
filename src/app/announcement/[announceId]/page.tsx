@@ -30,9 +30,9 @@ export default function PostDetail({ params }: { params: { announceId: string } 
   } = announce;
 
   return (
-    <main className="min-h-svh px-5 py-5 md:px-26 mb-[72px] md:mb-0">
-      <div className='max-w-5xl mx-auto'>
-        <PageHeader title='공지' showDropdown={false}/>
+    <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26 md:py-5">
+      <div className='max-w-2xl mx-auto'>
+      <PageHeader title='공지' showDropdown={false}/>
         {/* Post Details */}
         <div className="flex flex-col items-start gap-4 my-5">
           <div className="w-full">

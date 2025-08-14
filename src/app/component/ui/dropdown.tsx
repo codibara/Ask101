@@ -10,6 +10,7 @@ type Option = {
   label: string;
   value: string;
   icon?: ReactNode;
+  disabled?: boolean; 
 };
 
 type DropdownProps = {
@@ -22,14 +23,15 @@ export default function Dropdown({ options, onSelect, placeholder = 'Select...' 
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<Option | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [isOptionDisabled, setIsOptiondisabled] = useState(false);
 
   const handleSelect = (option: Option) => {
+    if (option.disabled) return; 
     setSelected(option);
     setIsOpen(false);
     onSelect(option.value);
   };
 
+  console.log(selected);
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,8 +64,8 @@ export default function Dropdown({ options, onSelect, placeholder = 'Select...' 
                 e.stopPropagation(); // prevent dropdown from closing early
                 handleSelect(option);
               }}
-              disabled={isOptionDisabled ? true : false}
-              className={`w-full px-4 py-2 flex flex-row gap-2 items-center hover:bg-gray-600  ${isOptionDisabled ? "cursor-not-allowed brightness-50 hover:bg-transparent" : "cursor-pointer" }`}
+              disabled={!!option.disabled}
+              className={`w-full px-4 py-2 flex flex-row gap-2 items-center hover:bg-gray-600  ${option.disabled ? "cursor-not-allowed brightness-50 hover:bg-transparent" : "cursor-pointer" }`}
             >
               {option.icon && <span>{option.icon}</span>}
               <span>{option.label}</span>

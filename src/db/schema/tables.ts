@@ -83,7 +83,7 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).unique(), // Email (from OAuth)
   emailVerified: timestamp("email_verified", { mode: "date" }), // Email verification
   displayName: varchar("display_name", { length: 255 }), // User's display name (nullable)
-  sex: Sex(), // Gender as enum (nullable)
+  sex: varchar("sex", { length: 64 }), // Gender as enum (nullable)
   birthYear: integer("birth_year"), // Birth year as integer (nullable)
   mbti: Mbti(), // MBTI enum column (nullable)
   job: Job(), // Job/occupation as enum (nullable)
@@ -91,6 +91,8 @@ export const users = pgTable("users", {
   isNotificationOn: boolean("is_notification_on").notNull().default(false), // Toggle for notifications
   onboardingCompleted: boolean("onboarding_completed").notNull().default(false), // Track if onboarding is done
   isAdmin: boolean("is_admin").notNull().default(false), // Admin privileges (simple boolean)
+  age: varchar("age", { length: 64 }),
+  registeredAt: timestamp("registered_at", { mode: "date" }).notNull().defaultNow(),
 });
 
 // Posts table for voting

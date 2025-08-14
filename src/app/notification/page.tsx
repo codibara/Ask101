@@ -16,11 +16,10 @@ export default function NotificationList() {
       : mockNotifications.filter((notification) => !notification.checked);
 
   return (
-    <main className="min-h-svh px-5 py-5 md:px-26">
+    <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26 md:py-5">
       <div className="max-w-2xl mx-auto">
-        <PageHeader title="알림" showBack={false} showDropdown={false} />
-
-        <div className="w-full flex flex-row items-center justify-center mb-5">
+      <PageHeader title="알림" showBack={false} showDropdown={false} />
+        <div className="w-full flex flex-row items-center justify-center">
           <ul className="flex flex-row bg-dark-900 rounded-full">
             <li
               onClick={() => setFilter('all')}
@@ -41,7 +40,7 @@ export default function NotificationList() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 py-4">
           {filteredNotifications.map((notification) => (
             <NotificationItem
               key={notification.notiId}

@@ -1,13 +1,13 @@
-import { UserCategory } from "@/types/post";
+import { User } from "@/types/post";
 
-interface PillProps extends UserCategory {}
+interface PillProps extends User {}
 
-const Pill = ({ gender, mbti, age, occupation }: PillProps) => (
+const Pill = ({ sex, mbti, age, job }: PillProps) => (
     <ul className="flex flex-row gap-1">
-        {[gender, mbti, age, occupation].map((item, idx) => (
+        {[sex, mbti, age, job].map((item, idx) => (
         <li
             key={idx}
-            className="text-main text-center text-[10px] rounded-full border border-main py-0.5 w-[60px]"
+            className="text-main text-center text-[10px] rounded-full border border-main py-0.5 px-2 min-w-[60px]"
         >
             {item}
         </li>

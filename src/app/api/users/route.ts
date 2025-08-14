@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db/index"
 import { users } from "@/db/schema/tables";
 import { eq } from "drizzle-orm/expressions";
+import { getAgeFromBirthYear, getAgeBucket } from "@/lib/ageCategory";
 
 // GET: List all users or a single user by ?id=
 export async function GET(request: Request) {
@@ -25,24 +26,41 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const newUser = await db
+
+    // Normalize birthYear: accept number/string, convert to number or null
+    const rawBY = body.birthYear;
+    let birthYear: number | null = null;
+    if (rawBY !== undefined && rawBY !== null && String(rawBY).trim() !== "") {
+      const n = Number(rawBY);
+      if (!Number.isNaN(n)) birthYear = n;
+    }
+
+    // Compute age bucket if we have a valid birthYear
+    const ageBucket = birthYear != null
+      ? getAgeBucket(getAgeFromBirthYear(birthYear))
+      : null;
+
+    const [newUser] = await db
       .insert(users)
       .values({
-        displayName: body.displayName,
-        sex: body.sex,
-        age: body.age,
-        mbti: body.mbti,
+        displayName: body.displayName ?? null,
+        sex: body.sex ?? null,
+        mbti: body.mbti ?? null,
+        birthYear,                                   // number | null
+        age: ageBucket ?? null,                      // your schema allows null
         isNotificationOn: body.isNotificationOn ?? false,
-        role: body.role,
-        post: body.post ?? [],         // defaults to empty array
-        savedPosts: body.savedPosts ?? [] // defaults to empty array
+        // DO NOT include unknown fields like role, post, savedPosts unless
+        // you add them to the `users` table schema first.
       })
       .returning();
-    return NextResponse.json(newUser[0], { status: 201 });
+
+    return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
   }
 }
+
 
 // PUT: Update an existing user (?id=)
 export async function PUT(request: Request) {
@@ -62,9 +80,6 @@ export async function PUT(request: Request) {
         age: body.age,
         mbti: body.mbti,
         isNotificationOn: body.isNotificationOn,
-        role: body.role,
-        post: body.post,
-        savedPosts: body.savedPosts,
       })
       .where(eq(users.id, id))
       .returning();

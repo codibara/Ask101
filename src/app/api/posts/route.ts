@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db/index";
-import { posts } from "@/db/schema/tables";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { posts, users } from "@/db/schema/tables";
 import { eq } from "drizzle-orm/expressions";
 
 // GET: List all posts or a single post by ?id=
@@ -9,38 +11,68 @@ export async function GET(request: Request) {
   const idParam = searchParams.get("id");
 
   if (idParam) {
-    const id = parseInt(idParam);
-    const postData = await db.select().from(posts).where(eq(posts.id, id));
-    if (!postData.length) {
+    const id = Number(idParam);
+    const result = await db
+      .select({
+        postId: posts.id,
+        title: posts.title,
+        content: posts.content,
+        option_a: posts.optionA,
+        option_b: posts.optionB,
+        votes_a: posts.votesA,
+        votes_b: posts.votesB,
+        is_end_vote: posts.isEndVote,
+        created_at: posts.createdAt,
+        author: {
+          userId: users.id,
+          display_name: users.displayName,
+          sex: users.sex,
+          mbti: users.mbti,
+          birth_year: users.birthYear,
+          job: users.job,
+          age: users.age, 
+        },
+      })
+      .from(posts)
+      .innerJoin(users, eq(posts.authorId, users.id))
+      .where(eq(posts.id, id));
+
+    if (!result.length) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
-    return NextResponse.json(postData[0]);
-  } else {
-    const allPosts = await db.select().from(posts);
-    return NextResponse.json(allPosts);
+    return NextResponse.json(result[0]);
   }
 }
 
 // POST: Create a new post
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const newPost = await db
+    const session = await getServerSession(authOptions);
+    const userId = Number(session?.user?.id);
+    if (!userId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+    const { title, content, optionA, optionB } = await request.json();
+    if (!title?.trim() || !optionA?.trim() || !optionB?.trim()) {
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    }
+
+    const contentSafe = typeof content === "string" ? content.trim() : "";
+
+    const [row] = await db
       .insert(posts)
       .values({
-        title: body.title,
-        content: body.content,
-        authorId: body.authorId,
-        optionA: body.optionA,
-        optionB: body.optionB,
-        votesA: body.votesA ?? 0,
-        votesB: body.votesB ?? 0,
-        isEndVote: body.isEndVote ?? false,
-        endedAt: body.endedAt, // expects a valid timestamp string
-        // createdAt will default via schema if not provided
+        title: title.trim(),
+        content: contentSafe.trim(),
+        authorId: userId,
+        optionA: optionA.trim(),
+        optionB: optionB.trim(),
+        votesA: 0,
+        votesB: 0,
+        isEndVote: false,
       })
-      .returning();
-    return NextResponse.json(newPost[0], { status: 201 });
+      .returning({ id: posts.id });
+    return NextResponse.json(row, { status: 201 });
   } catch (error) {
     console.error("Error creating post:", error);
     return NextResponse.json(
