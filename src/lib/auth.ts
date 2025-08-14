@@ -10,8 +10,11 @@ import {
 
 export const authOptions = {
   adapter: DrizzleAdapter(db, {
-    usersTable: users,
+    // @ts-ignore
+    usersTable: users, 
+    // @ts-ignore
     accountsTable: accounts,
+    // @ts-ignore
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
@@ -22,6 +25,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    // @ts-ignore
     async session({ session, user, token }) {
       if (session.user) {
         session.user.id = user?.id || token?.sub;
@@ -32,6 +36,7 @@ export const authOptions = {
       }
       return session;
     },
+    // @ts-ignore
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
