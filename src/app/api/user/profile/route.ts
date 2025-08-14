@@ -3,13 +3,31 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/db";
 import { users } from "@/db/schema/tables";
+import type { InferInsertModel } from "drizzle-orm";
 import { eq } from "drizzle-orm";
 
 import { getAgeFromBirthYear, getAgeBucket } from "@/lib/ageCategory";
 
+type UpdateData = Partial<InferInsertModel<typeof users>>;
+
+// MBTI type guard setup
+const validMbtiTypes = [
+  "INTJ", "INTP", "ENTJ", "ENTP",
+  "INFJ", "INFP", "ENFJ", "ENFP",
+  "ISTJ", "ISFJ", "ESTJ", "ESFJ",
+  "ISTP", "ISFP", "ESTP", "ESFP",
+] as const;
+
+type MbtiType = typeof validMbtiTypes[number];
+
+function isValidMbti(value: string): value is MbtiType {
+  return validMbtiTypes.includes(value as MbtiType);
+}
+
+
 export async function PUT(request: NextRequest) {
   try {
-    // @ts-expect-error
+    // @ts-expect-error: error placeholder
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
@@ -31,81 +49,38 @@ export async function PUT(request: NextRequest) {
       job,
       customJob,
       registeredAt
-    }); // Debug log
+    });
 
-    // Validate required displayName
-    if (!displayName || displayName.trim() === "") {
-      return NextResponse.json(
-        { error: "Display name is required" },
-        { status: 400 }
-      );
-    }
-
-    
-
-    // Handle MBTI value (now comes as combined string from frontend)
-    let mbtiValue = null;
-    if (mbti && typeof mbti === "string" && mbti.length === 4) {
-      // Validate that it's a valid MBTI type
-      const validMbtiTypes = [
-        "INTJ",
-        "INTP",
-        "ENTJ",
-        "ENTP",
-        "INFJ",
-        "INFP",
-        "ENFJ",
-        "ENFP",
-        "ISTJ",
-        "ISFJ",
-        "ESTJ",
-        "ESFJ",
-        "ISTP",
-        "ISFP",
-        "ESTP",
-        "ESFP",
-      ];
-      if (validMbtiTypes.includes(mbti)) {
-        mbtiValue = mbti;
-      }
-    }
-
-    type UpdateData = {
-      displayName: string;
-      onboardingCompleted: boolean;
-    };
-    
-    // Update user profile
-    const updateData: any = {
+    const updateData: UpdateData = {
       displayName: displayName.trim(),
       onboardingCompleted: true,
-    } satisfies UpdateData;;
+    };
 
-    
-
-    // Handle sex field - convert Korean to English if needed
+    // Handle sex
     if (sex) {
-      if (sex === "남자") {
-        updateData.sex = "남자";
-      } else if (sex === "여자") {
-        updateData.sex = "여자";
-      } else {
-        updateData.sex = sex;
-      }
+      if (sex === "남자") updateData.sex = "남자";
+      else if (sex === "여자") updateData.sex = "여자";
+      else updateData.sex = sex;
     }
-    if (birthYear) updateData.birthYear = parseInt(birthYear);
-    if (mbtiValue) updateData.mbti = mbtiValue;
 
-    // Handle job and custom job
+    // Birth year
+    if (birthYear) updateData.birthYear = parseInt(birthYear);
+
+    // MBTI (now type-safe)
+    if (mbti && typeof mbti === "string" && isValidMbti(mbti)) {
+      updateData.mbti = mbti;
+    }
+
+    // Job and custom job
     if (job && job !== "기타") {
       updateData.job = job;
-      updateData.customJob = null; // Clear custom job if not "기타"
+      updateData.customJob = null;
     } else if (job === "기타" && customJob) {
       updateData.job = "기타";
       updateData.customJob = customJob.trim();
     }
 
-    // Normalize birthYear if provided
+    // Normalize birthYear
     let normalizedBirthYear: number | null = null;
     if (birthYear !== undefined && birthYear !== null && String(birthYear).trim() !== "") {
       const num = Number(birthYear);
@@ -115,7 +90,7 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // If birthYear not provided in this request, fetch current one to compute age
+    // Fallback to DB birthYear if not provided
     if (normalizedBirthYear == null) {
       const [current] = await db
         .select({ birthYear: users.birthYear })
@@ -129,27 +104,26 @@ export async function PUT(request: NextRequest) {
           : null;
     }
 
-    // Compute age bucket from whichever birthYear we’re using
+    // Compute age bucket
     const ageBucket = getAgeBucket(getAgeFromBirthYear(normalizedBirthYear));
-    // If you have a users.age column, set it:
     updateData.age = ageBucket;
 
     const [updated] = await db
-    .update(users)
-    .set(updateData)
-    .where(eq(users.id, parseInt(session.user.id)))
-    .returning({
-      id: users.id,
-      displayName: users.displayName,
-      sex: users.sex,
-      birthYear: users.birthYear,
-      mbti: users.mbti,
-      job: users.job,
-      customJob: users.customJob,
-      onboardingCompleted: users.onboardingCompleted,
-      age: users.age,
-      createdAt: users.registeredAt
-    });
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, parseInt(session.user.id)))
+      .returning({
+        id: users.id,
+        displayName: users.displayName,
+        sex: users.sex,
+        birthYear: users.birthYear,
+        mbti: users.mbti,
+        job: users.job,
+        customJob: users.customJob,
+        onboardingCompleted: users.onboardingCompleted,
+        age: users.age,
+        createdAt: users.registeredAt
+      });
 
     return NextResponse.json({
       success: true,
@@ -169,9 +143,10 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+
 export async function GET() {
   try {
-    // @ts-expect-error
+    // @ts-expect-error: error placeholder
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
