@@ -9,7 +9,7 @@ import { getAgeFromBirthYear, getAgeBucket } from "@/lib/ageCategory";
 
 export async function PUT(request: NextRequest) {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
@@ -70,11 +70,16 @@ export async function PUT(request: NextRequest) {
       }
     }
 
+    type UpdateData = {
+      displayName: string;
+      onboardingCompleted: boolean;
+    };
+    
     // Update user profile
     const updateData: any = {
       displayName: displayName.trim(),
       onboardingCompleted: true,
-    };
+    } satisfies UpdateData;;
 
     
 
@@ -164,21 +169,15 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
     
-    const [user] = await db
-    .select()
-    .from(users)
-    .where(eq(users.id, Number(session.user.id)))
-    .limit(1);
-
     // Get user profile data
     const [row] = await db
       .select({

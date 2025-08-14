@@ -11,11 +11,11 @@ import {
 
 export const authOptions = {
   adapter: DrizzleAdapter(db, {
-    // @ts-expect-error
+    // @ts-expect-error: type error
     usersTable: users, 
-    // @ts-expect-error
+    // @ts-expect-error: type error
     accountsTable: accounts,
-    // @ts-expect-error
+    // @ts-expect-error: type error
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
@@ -26,7 +26,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    // @ts-expect-error
+    // @ts-expect-error: type error
     async session({ session, user, token }) {
       if (session.user) {
         session.user.id = user?.id || token?.sub;
@@ -37,7 +37,7 @@ export const authOptions = {
       }
       return session;
     },
-    // @ts-expect-error
+    // @ts-expect-error: type error
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

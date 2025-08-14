@@ -221,7 +221,8 @@ export default function Post() {
         setModalOpen(true);
       } else {
         // If backend returns uniqueness error or anything else, surface it
-        const err = await response.json().catch(() => ({} as any));
+        const err = (await response.json().catch(() => ({}))) as { error?: string };
+
         alert(err?.error || "저장 중 오류가 발생했습니다.");
       }
     } catch (error) {

@@ -81,7 +81,7 @@ const {
   const dropdownButtonDisabled = (vA ?? 0) > 0 || (vB ?? 0) > 0;
 
   const isLoggedIn = !!session?.user;
-  const currentUserId = (session?.user as any)?.id ?? (session?.user as any)?.userId;
+  const currentUserId = session?.user?.id;
   const isMyPost = currentUserId === author.userId; 
 
   const isAWinning = (vA ?? 0) >= (vB ?? 0);
