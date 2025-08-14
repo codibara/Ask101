@@ -1,24 +1,13 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
-import { Announcement } from '@/types/announcement';
 import { getAnnounceById } from "@/lib/announceService";
 import PageHeader from '@/app/component/shared/pageHeader';
 
-export default function PostDetail({
+export default async function PostDetail({
   params,
 }: {
   params: { announceId: string };
 }) {
-  const [announce, setAnnounce] = useState<Announcement | null>(null);
-
-  // Convert URL param from string → number
   const announceId = parseInt(params.announceId, 10);
-
-  useEffect(() => {
-    getAnnounceById(announceId).then(setAnnounce);
-  }, [announceId]);
+  const announce = await getAnnounceById(announceId);
 
   if (!announce) {
     return <div className="p-10 text-red-500">Post not found</div>;
