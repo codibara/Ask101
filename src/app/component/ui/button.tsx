@@ -2,15 +2,15 @@ import React, { ReactNode } from 'react';
 import Link from 'next/link';
 
 interface ButtonProp{
-    text?: any,
+    text?: string;
     beforeIcon?: ReactNode;
     afterIcon?: ReactNode;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     variant?: 'primary' | 'secondary' | 'tertiary';
-    disabled?: Boolean;
-    isLink: Boolean;
+    disabled?: boolean;
+    isLink: boolean;
     href?: string;
-    isLoading?: Boolean;
+    isLoading?: boolean;
 }
 
 const Button = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary', disabled = false, isLink = false, href = "#", isLoading = false}: ButtonProp) => {

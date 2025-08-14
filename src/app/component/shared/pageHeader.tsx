@@ -3,7 +3,6 @@
 import Dropdown from '@/app/component/ui/dropdown';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Trash3, Pencil } from 'react-bootstrap-icons';
-import Button from '../ui/button';
 
 type PageHeaderProps = {
   onEditClick?: () => void | undefined;
@@ -15,7 +14,7 @@ type PageHeaderProps = {
   postId?: number;
 };
 
-export default function PageHeader({ onDeleteClick, onEditClick, title, postId, showDropdown = true, showBack = true , isButtonDisabled = false}: PageHeaderProps) {
+export default function PageHeader({ onDeleteClick, onEditClick, title, showDropdown = true, showBack = true , isButtonDisabled = false}: PageHeaderProps) {
   const router = useRouter();
 
   const options = [

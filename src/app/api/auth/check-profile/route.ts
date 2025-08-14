@@ -5,8 +5,9 @@ import { db } from "@/db";
 import { users } from "@/db/schema/tables";
 import { eq } from "drizzle-orm";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
+    // @ts-ignore
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {

@@ -8,7 +8,6 @@ import {
   PlusCircle, PlusCircleFill, 
   Bell, BellFill, 
   Gear, GearFill,
-  Google
 } from 'react-bootstrap-icons';
 
 import LogoDesktop from './logoDesktop';

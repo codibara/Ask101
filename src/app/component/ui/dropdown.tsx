@@ -19,7 +19,7 @@ type DropdownProps = {
   placeholder?: string;
 };
 
-export default function Dropdown({ options, onSelect, placeholder = 'Select...' }: DropdownProps) {
+export default function Dropdown({ options, onSelect }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<Option | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);

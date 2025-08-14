@@ -20,13 +20,11 @@ interface CommentItemProps extends Comment {
 const CommentItem = ({
   id,
   reply,
-  parent_reply_id,
   is_deleted,
   created_at,
   author,
   isLoggedIn,
   setIsAnyReplyOpen,
-  isAnyReplyOpen,
   replies = [],
   onSubmitReply
 }: CommentItemProps) => {

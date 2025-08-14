@@ -60,17 +60,17 @@ async function seed() {
     .returning();
 
   // Another direct reply to post1 (Alice replies to her own post)
-  const [reply2] = await db
-    .insert(reply)
-    .values({
-      reply:
-        "Good point about mentoring, but tools like Slack and video calls can bridge that gap effectively.",
-      userId: alice.id,
-      postId: post1.id,
-      parentReplyId: null, // Direct reply to post
-      isDeleted: false,
-    })
-    .returning();
+  // const [reply2] = await db
+  //   .insert(reply)
+  //   .values({
+  //     reply:
+  //       "Good point about mentoring, but tools like Slack and video calls can bridge that gap effectively.",
+  //     userId: alice.id,
+  //     postId: post1.id,
+  //     parentReplyId: null, // Direct reply to post
+  //     isDeleted: false,
+  //   })
+  //   .returning();
 
   // Reply to reply1 (Alice replies to Bob's comment)
   await db

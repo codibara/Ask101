@@ -8,13 +8,14 @@ import {
   verificationTokens,
 } from "@/db/schema/tables";
 
+
 export const authOptions = {
   adapter: DrizzleAdapter(db, {
-    // @ts-ignore
+    // @ts-expect-error
     usersTable: users, 
-    // @ts-ignore
+    // @ts-expect-error
     accountsTable: accounts,
-    // @ts-ignore
+    // @ts-expect-error
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
@@ -25,7 +26,7 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    // @ts-ignore
+    // @ts-expect-error
     async session({ session, user, token }) {
       if (session.user) {
         session.user.id = user?.id || token?.sub;
@@ -36,7 +37,7 @@ export const authOptions = {
       }
       return session;
     },
-    // @ts-ignore
+    // @ts-expect-error
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

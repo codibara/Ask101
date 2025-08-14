@@ -25,8 +25,6 @@ export default function PostDetail({ params }: { params: { announceId: string } 
     title,
     content,
     date,
-    commentCount,
-    viewCount,
   } = announce;
 
   return (

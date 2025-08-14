@@ -3,13 +3,13 @@ import GoogleIcon from "../../../../public/icons8-google.svg";
 
 
 interface LoginButtonProp{
-    text?: any,
+    text?: string;
     beforeIcon?: ReactNode;
     afterIcon?: ReactNode;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     variant?: 'primary' | 'secondary';
-    disabled?: Boolean;
-    isGoogle: Boolean;
+    disabled?: boolean;
+    isGoogle: boolean;
 }
 
 const IconButton = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary', disabled = false, isGoogle = true }: LoginButtonProp) => {

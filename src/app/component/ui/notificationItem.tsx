@@ -1,7 +1,7 @@
 import { Notification } from "@/types/notification";
 import Link from 'next/link';
 
-const NotificationItem = ({ postId, notiId, title, content, category, date, checked }: Notification) => {
+const NotificationItem = ({ postId, title, content, category, date, checked }: Notification) => {
     const isNotice = category === "공지";
 
     return (

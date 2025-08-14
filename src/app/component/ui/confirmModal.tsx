@@ -33,7 +33,6 @@ export default function ConfirmModal({
   secondaryText,
   backdropClosable = true,
   closeOnConfirm = true,
-  variant = 'primary',
 }: ConfirmModalProps) {
   const [isConfirming, setIsConfirming] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);

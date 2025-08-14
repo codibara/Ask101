@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { reply, users } from "@/db/schema/tables";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

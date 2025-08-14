@@ -66,7 +66,7 @@ const {
   const [selectedOption, setSelectedOption] = useState<"A" | "B" | null>(null);
   const [isAnyReplyOpen, setIsAnyReplyOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [, setDeleting] = useState(false);
   const [vA, setVA] = useState<number>(votes_a ?? 0);
   const [vB, setVB] = useState<number>(votes_b ?? 0);
   const [voting, setVoting] = useState(false);

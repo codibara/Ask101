@@ -9,6 +9,7 @@ import { getAgeFromBirthYear, getAgeBucket } from "@/lib/ageCategory";
 
 export async function PUT(request: NextRequest) {
   try {
+    // @ts-ignore
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
@@ -165,6 +166,7 @@ export async function PUT(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    // @ts-ignore
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
@@ -176,13 +178,6 @@ export async function GET(request: NextRequest) {
     .from(users)
     .where(eq(users.id, Number(session.user.id)))
     .limit(1);
-
-    // Format registeredAt in backend
-    let formattedDate = "";
-    if (user.registeredAt) {
-      const d = new Date(user.registeredAt);
-      formattedDate = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
-    }
 
     // Get user profile data
     const [row] = await db
