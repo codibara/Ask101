@@ -4,15 +4,13 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-
 import NotificationItem from "../component/ui/notificationItem";
 import PageHeader from "@/app/component/shared/pageHeader";
-
 import { mockNotifications } from "@/data/mock_notification_data";
 
 export default function NotificationList() {
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   // Redirect if not logged in
@@ -30,7 +28,7 @@ export default function NotificationList() {
   return (
     <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26 md:py-5">
       <div className="max-w-2xl mx-auto">
-      <PageHeader title="알림" showBack={false} showDropdown={false} />
+        <PageHeader title="알림" showBack={false} showDropdown={false} />
         <div className="w-full flex flex-row items-center justify-center">
           <ul className="flex flex-row bg-dark-900 rounded-full">
             <li
