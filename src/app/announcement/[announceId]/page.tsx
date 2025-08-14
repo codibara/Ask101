@@ -7,8 +7,11 @@ import { getAnnounceById } from "@/lib/announceService";
 
 import PageHeader from '@/app/component/shared/pageHeader';
 
+interface Props {
+  params: { announceId: string };
+}
 
-export default function PostDetail({ params }: { params: { announceId: string } }) {
+export default function PostDetail({ params }: Props) {
   const [announce, setAnnounce] = useState<Announcement | null>(null);
 
   const announceId = parseInt(params.announceId, 10);
