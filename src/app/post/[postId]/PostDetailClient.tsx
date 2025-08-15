@@ -314,7 +314,7 @@ const MODAL_CONFIG: Record<ModalKind, {
         {/* Post Details */}
         <div className="flex flex-col items-start gap-4 mb-5">
           <div className="w-full">
-            <h1 className="text-2xl font-bold mb-1.5">
+            <h1 className="text-2xl font-bold mb-2">
             {is_end_vote && <span className="text-xs py-1 px-2 text-dark-950 bg-main rounded-sm mr-2 align-middle">투표완료</span>}
             {title}
             </h1>

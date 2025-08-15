@@ -18,7 +18,7 @@ const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, v
         <div className="flex flex-col gap-4">
             <div className='w-[100%]'>
                 <div>
-                    <h1 className="text-xl truncate text-ellipsis overflow-hidden whitespace-nowrap font-semibold mb-1.5">
+                    <h1 className="text-xl truncate text-ellipsis overflow-hidden whitespace-nowrap font-semibold mb-2">
                         {is_end_vote && <span className="text-xs py-1 px-2 text-dark-950 bg-main rounded-sm mr-2 align-middle">투표완료</span>}
                         {title}
                     </h1>
