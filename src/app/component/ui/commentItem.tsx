@@ -67,7 +67,7 @@ const CommentItem = ({
       {/* Top-level comment */}
       <div className="flex flex-col gap-3">
         <Pill sex={pillSex} mbti={pillMbti} age={pillAge} job={pillJob} />
-        <p>{is_deleted ? "관리자에 의해 삭제된 댓글 입니다" : reply}</p>
+        <p>{is_deleted ? "관리자에 의해 삭제된 댓글 입니다." : reply}</p>
         <div className="flex flex-row justify-between">
           <div className="flex flex-row gap-2 -mt-1">
             <p className="text-sm text-gray-500">{display_name}</p>
