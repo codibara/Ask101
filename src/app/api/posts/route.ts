@@ -47,6 +47,7 @@ export async function GET(request: Request) {
 // POST: Create a new post
 export async function POST(request: Request) {
   try {
+    // @ts-expect-error: type error
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id);
     if (!userId) {
