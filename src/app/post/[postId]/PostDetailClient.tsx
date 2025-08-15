@@ -78,8 +78,6 @@ const {
   const openModal = (kind: ModalKind) => setModal({ open: true, kind });
   const closeModal = () => setModal({ open: false, kind: undefined });
 
-  const dropdownButtonDisabled = (vA ?? 0) > 0 || (vB ?? 0) > 0;
-
   const isLoggedIn = !!session?.user;
   const currentUserId = session?.user?.id;
   const isMyPost = currentUserId === author.userId; 
@@ -118,13 +116,10 @@ const {
     return acc;
   }, [allComments]);
 
-  if (!post) {
-    return <div className="p-10 text-red-500">Post not found</div>;
-  }
+  const dropdownButtonDisabled =
+  (vA ?? 0) > 0 || (vB ?? 0) > 0 || topLevel.length > 0;
 
   const handleDelete = () => openModal('deletePost');
-
-  console.log(is_end_vote);
 
   //POST Vote
   const submitVote = async (choice: "A" | "B") => {
@@ -301,6 +296,10 @@ const MODAL_CONFIG: Record<ModalKind, {
 } as const;
 
   const cfg = modal.kind ? MODAL_CONFIG[modal.kind] : null;
+
+  if (!post) {
+    return <div className="p-10 text-red-500">Post not found</div>;
+  }
 
   return (
     <main className="min-h-[calc(100svh-160px)] px-5 pb-[160px] md:px-26 md:py-5">

@@ -3,7 +3,7 @@ import { db } from "@/db/index";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { posts, users } from "@/db/schema/tables";
-import { eq } from "drizzle-orm/expressions";
+import { eq } from "drizzle-orm";
 
 // GET: List all posts or a single post by ?id=
 export async function GET(request: Request) {
@@ -122,26 +122,26 @@ export async function PUT(request: Request) {
 }
 
 // DELETE: Remove a post (?id=)
+
 export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const idParam = searchParams.get("id");
-  if (!idParam) {
-    return NextResponse.json({ error: "Missing post id" }, { status: 400 });
-  }
-  const id = parseInt(idParam);
   try {
-    const deletedPost = await db
-      .delete(posts)
-      .where(eq(posts.id, id))
-      .returning();
-    if (!deletedPost.length) {
+    const { searchParams } = new URL(request.url);
+    const idParam = searchParams.get("id");
+    if (!idParam) {
+      return NextResponse.json({ error: "Missing post id" }, { status: 400 });
+    }
+    const id = Number(idParam);
+    if (!Number.isInteger(id)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+
+    const deleted = await db.delete(posts).where(eq(posts.id, id)).returning();
+    if (!deleted.length) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
-    return NextResponse.json(deletedPost[0]);
+    return NextResponse.json(deleted[0], { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to delete post" },
-      { status: 500 }
-    );
+    console.error("[DELETE /api/posts] error:", error);
+    return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
   }
 }
