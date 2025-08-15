@@ -250,7 +250,7 @@ export default function Post() {
     <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26 md:py-5">
       <div className="max-w-2xl mx-auto">
         <PageHeader showBack={false} showDropdown={false} title="프로필" />
-        <div className="flex flex-col gap-8 py-4">
+        <div className="flex flex-col gap-8 py-4 min-h-[calc(100svh-210px)] md:min-h-[calc(100svh-100px)]">
           {/* Nickname */}
           <div className="w-full flex flex-col gap-2">
             <p className="block text-sm font-medium">닉네임</p>
@@ -375,7 +375,8 @@ export default function Post() {
           </div>
 
           {/* Occupation */}
-          <div className="flex flex-col gap-3 items-start">
+          <div className="flex-grow">
+          <div className="flex flex-grow flex-col gap-3 items-start">
             <p className="block text-sm font-medium mb-2">직업</p>
             <div className="flex flex-row gap-2 flex-wrap">
               {["중고등학생", "대학/대학원생", "취준생", "직장인", "자영업", "전문직", "기타"].map((job) => (
@@ -403,6 +404,7 @@ export default function Post() {
             />
             {errors.job && <p className="mt-1 text-sm text-red-500">{errors.job}</p>}
             {errors.customJob && <p className="mt-1 text-sm text-red-500">{errors.customJob}</p>}
+          </div>
           </div>
 
           {/* Actions */}
