@@ -21,7 +21,7 @@ const IconButton = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary',
   const variantClasses = {
     primary: `
       bg-dark-900 border border-main text-main
-      hover:bg-main-shade hover:text-gray-400 
+      hover:bg-main-hover hover:text-gray-900
       active:bg-gray-600 active: border-main-shade
       disabled:bg-login-disabled disabled:text-gray-600 disabled:brightness-50 disabled:border-dark-900 disabled:pointer-events-none
     `,

@@ -105,7 +105,7 @@ const CommentItem = ({
                 onChange={(e) => setCommentInput(e.target.value)}
               />
               <Button
-                beforeIcon={<ChatLeftText size={16} color="#B19DFF" />}
+                beforeIcon={<ChatLeftText size={16} color="#7CF9DC" />}
                 variant="tertiary"
                 isLink={false}
                 disabled={!commentInput.trim()}

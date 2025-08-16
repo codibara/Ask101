@@ -1,8 +1,12 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/db";
-import { posts as postsTable, users as usersTable, votes as votesTable, reply as repliesTable } from "@/db/schema/tables";
-import { and, eq, isNull, count } from "drizzle-orm";
+import { 
+  posts as postsTable, 
+  users as usersTable, 
+  votes as votesTable, 
+  reply as repliesTable } from "@/db/schema/tables";
+import { and, eq, isNull, count, desc } from "drizzle-orm";
 import PostList from "@/app/postList";
 
 export type PostListRow = {
@@ -77,7 +81,11 @@ export default async function Home() {
           isNull(repliesTable.parentReplyId)
         )
       )
-      .groupBy(postsTable.id, usersTable.id, votesTable.id);
+      .groupBy(postsTable.id, usersTable.id, votesTable.id)
+      .orderBy(
+        desc(postsTable.createdAt),   // newest first
+        desc(postsTable.id)           // tie-breaker for same timestamp
+      );
 
   // format date
   function formatYMD(date: Date | string) {

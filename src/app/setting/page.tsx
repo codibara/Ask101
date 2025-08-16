@@ -34,6 +34,9 @@ export default function Post() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGoodNickname, setIsGoodNickname] = useState(false);
+  const [initialNickname, setInitialNickname] = useState("");
+
 
   // NEW: per-field errors
   const [errors, setErrors] = useState<{
@@ -62,6 +65,7 @@ export default function Post() {
           const userData = await response.json();
           setCreatedDate(userData.registeredAtFormatted || "");
           setUserNickName(userData.displayName || "");
+          setInitialNickname(userData.displayName || ""); //For validation
           setSelectedGender(userData.sex || "");
           setUserBirthYear(userData.birthYear || "");
 
@@ -103,15 +107,26 @@ export default function Post() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
       if (value.trim()) {
-        const res = await fetch("/api/user/check-nickname", {
+        // if same as original, skip check and clear message
+        if (value.trim() === initialNickname.trim()) {
+          setErrors((prev) => ({ ...prev, displayName: "" })); // no message
+          setIsGoodNickname(true);
+          return;
+        }
+        const res = await fetch("/api/user/profile/check-nickname", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ nickname: value.trim() }),
         });
+        
         const { exists } = await res.json();
         if (exists) {
           setErrors((prev) => ({ ...prev, displayName: "이미 사용 중인 닉네임입니다." }));
-        } 
+          setIsGoodNickname(false);
+        } else {
+          setErrors((prev) => ({ ...prev, displayName: "사용가능한 닉네임입니다." }));
+          setIsGoodNickname(true); 
+        }
       }
     }, 500);
   };
@@ -263,7 +278,7 @@ export default function Post() {
               maxLength={15}
             />
             <div className="flex flex-row justify-between">
-            <p className="text-sm text-red-500">{errors.displayName}</p>
+            <p className={`text-sm ${isGoodNickname ? 'text-green-600' : 'text-red-500'}`}>{errors.displayName}</p>
             <p className="text-xs text-gray-500">{createdDate} 가입</p>
             </div>
           </div>

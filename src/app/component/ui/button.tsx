@@ -22,7 +22,7 @@ const Button = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary', dis
   const variantClasses = {
     primary: `
       bg-main text-dark-950 rounded-xl border border-dark-900
-      hover:bg-main-shade hover:text-gray-400 
+      hover:bg-main-hover hover:text-dark-900 
       active:bg-main-shade-secondary
       disabled:bg-dark-900 disabled:text-gray-600
     `,

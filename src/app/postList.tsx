@@ -36,12 +36,14 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
   const [tab, setTab] = useState<Tab>("ongoing");
 
   const filtered = useMemo(() => {
+    const isOngoing = (p: Row["post"]) =>
+      (p.ended_at == null) && (p.is_end_vote !== true);
     switch (tab) {
       case "ongoing":
         return rows.filter(r => r.post.ended_at == null);
       case "participating":
         // userVoteId was set by the server join for the current user
-        return rows.filter(r => r.post.ended_at == null && r.userVoteId != null);
+        return rows.filter(r => isOngoing(r.post) && r.userVoteId != null);
       case "ended":
         return rows.filter(r => r.post.ended_at != null);
     }

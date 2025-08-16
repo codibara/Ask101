@@ -9,7 +9,7 @@ import {
   reply as repliesTable,
   votes as votesTable,
 } from "@/db/schema/tables";
-import { and, eq, isNull, count } from "drizzle-orm";
+import { and, eq, isNull, count, desc } from "drizzle-orm";
 import PostList from "@/app/postList";
 
 export default async function MyPostsPage() {
@@ -54,10 +54,20 @@ export default async function MyPostsPage() {
       and(eq(repliesTable.postId, postsTable.id), isNull(repliesTable.parentReplyId))
     )
     // (optional) join votes just to provide userVoteId; not used on "My posts" tab
-    .leftJoin(votesTable, eq(votesTable.postId, postsTable.id))
+    .leftJoin(
+      votesTable,
+      and(
+        eq(votesTable.postId, postsTable.id),
+        eq(votesTable.userId, userId)   // <= important
+      )
+    )
     // only my posts
     .where(eq(postsTable.authorId, userId))
-    .groupBy(postsTable.id, usersTable.id, votesTable.id);
+    .groupBy(postsTable.id, usersTable.id, votesTable.id)
+    .orderBy(
+            desc(postsTable.createdAt),   // newest first
+            desc(postsTable.id)           // tie-breaker for same timestamp
+          );
 
   const formatYMD = (d: Date | string | null) =>
     d ? (d instanceof Date ? d.toISOString().split("T")[0] : new Date(d).toISOString().split("T")[0]) : null;
