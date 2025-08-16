@@ -271,7 +271,7 @@ export default function Post() {
             <p className="block text-sm font-medium">닉네임</p>
             <input
               type="text"
-              className={`px-3 py-1 h-12 rounded-md bg-main text-dark-950 focus:outline-none`}
+              className={`px-3 py-1 h-12 rounded-md border border-transparent bg-main text-dark-950 focus:outline-none focus:border-main focus:bg-transparent focus:text-main`}
               onChange={handleUserNickname}
               value={userNickName}
               placeholder="닉네임을 입력하세요"
