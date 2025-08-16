@@ -447,7 +447,7 @@ export default function Post() {
       </div>
 
       <ConfirmModal
-        icon={<CheckCircle size={62} color="#B19DFF" />}
+        icon={<CheckCircle size={62} color="#7CF9DC" />}
         primaryText="확인"
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}

@@ -270,26 +270,26 @@ const MODAL_CONFIG: Record<ModalKind, {
     message: '그래도 삭제 하시겠습니까?',
     primaryText: '삭제',
     secondaryText: '취소',
-    icon: <ExclamationTriangle size={62} color="#B19DFF" />,
+    icon: <ExclamationTriangle size={62} color="#7CF9DC" />,
     onConfirm: handleDeleteAsync,
   },
   selfVote: {
     message: '내 게시물에는 투표할 수 없습니다.',
     primaryText: '확인',
-    icon: <ExclamationTriangle size={62} color="#B19DFF" />,
+    icon: <ExclamationTriangle size={62} color="#7CF9DC" />,
     onConfirm: () => closeModal()
   },
   loginReqired: {
     message: '로그인이 필요한 서비스 입니다',
     primaryText: '로그인',
     secondaryText: '닫기',
-    icon: <ExclamationTriangle size={62} color="#B19DFF" />,
+    icon: <ExclamationTriangle size={62} color="#7CF9DC" />,
     onConfirm: () => router.push("/login")
   },
   voteEnded :{
     message: '투표가 완료된 게시글에는 투표할 수 없습니다.',
     primaryText: '확인',
-    icon: <ExclamationTriangle size={62} color="#B19DFF" />,
+    icon: <ExclamationTriangle size={62} color="#7CF9DC" />,
     onConfirm: () => closeModal()
       
   }
