@@ -269,17 +269,20 @@ export default function Post() {
           {/* Nickname */}
           <div className="w-full flex flex-col gap-2">
             <p className="block text-sm font-medium">닉네임</p>
-            <input
-              type="text"
-              className={`px-3 py-1 h-12 rounded-md border border-transparent bg-main text-dark-950 focus:outline-none focus:border-main focus:bg-transparent focus:text-main`}
-              onChange={handleUserNickname}
-              value={userNickName}
-              placeholder="닉네임을 입력하세요"
-              maxLength={15}
-            />
+            <div className="relative">
+              <input
+                type="text"
+                className={`w-full px-3 py-1 h-12 rounded-md border border-transparent bg-main text-dark-950 focus:outline-none focus:border-main focus:bg-transparent focus:text-main`}
+                onChange={handleUserNickname}
+                value={userNickName}
+                placeholder="닉네임을 입력하세요"
+                maxLength={15}
+              />
+              <p className="absolute right-4 top-3 text-main">{userNickName.length}/15자</p>
+            </div>
             <div className="flex flex-row justify-between">
-            <p className={`text-sm ${isGoodNickname ? 'text-green-600' : 'text-red-500'}`}>{errors.displayName}</p>
-            <p className="text-xs text-gray-500">{createdDate} 가입</p>
+              <p className={`text-sm ${isGoodNickname ? 'text-green-600' : 'text-red-500'}`}>{errors.displayName}</p>
+              <p className="text-xs text-gray-500">{createdDate} 가입</p>
             </div>
           </div>
 

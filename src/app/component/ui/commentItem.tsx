@@ -11,8 +11,8 @@ type ReplyItem = Comment & { author: User };
 interface CommentItemProps extends Comment {
   author: User;
   isLoggedIn: boolean;
-  setIsAnyReplyOpen: (open: boolean) => void;
-  isAnyReplyOpen: boolean;
+  openReplyId: number | null; 
+  setOpenReplyId: (id: number | null) => void;
   replies?: ReplyItem[];
   onSubmitReply: (parentId: number, text: string) => Promise<void> | void; 
 }
@@ -24,21 +24,21 @@ const CommentItem = ({
   created_at,
   author,
   isLoggedIn,
-  setIsAnyReplyOpen,
+  openReplyId,
+  setOpenReplyId,
   replies = [],
   onSubmitReply
 }: CommentItemProps) => {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [posting, setPosting] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleReplyList = () => setIsOpen((prev) => !prev);
-  const handleReplyInput = () => setIsReplyOpen((prev) => !prev);
+  const isReplyOpen = openReplyId === id;
 
-  useEffect(() => {
-    setIsAnyReplyOpen(isReplyOpen);
-  }, [isReplyOpen, setIsAnyReplyOpen]);
+  const handleReplyInput = () => {
+    setOpenReplyId(isReplyOpen ? null : id); 
+  };
 
   const handleReplySend = async () => {
     if (!onSubmitReply || !commentInput.trim() || posting) return;
@@ -99,8 +99,8 @@ const CommentItem = ({
             <div className="flex flex-row gap-3 items-center bg-dark-900 rounded-md pl-2 pr-1 mb-1">
               <input
                 type="text"
-                className="w-full px-2 bg-dark-900 rounded-md focus:outline-none"
-                placeholder="작성한 댓글은 수정 및 삭제가 불가합니다."
+                className={`${isReplyOpen ? "block" : "hidden"} w-full px-2 bg-dark-900 rounded-md focus:outline-none`}
+                placeholder="작성한 답글은 수정 및 삭제가 불가합니다."
                 value={commentInput}
                 onChange={(e) => setCommentInput(e.target.value)}
               />
@@ -129,7 +129,7 @@ const CommentItem = ({
         return (
           <div className={`${isOpen ? "flex" : "hidden"} flex-col gap-2 ml-10`} key={r.id}>
             {rPill && <Pill sex={rPill.sex} mbti={rPill.mbti} age={rPill.age} job={rPill.job} />}
-            {isDeleted ? <p>관리자에 의해 삭제된 댓글 입니다.</p> : <p>{r.reply}</p>}
+            {isDeleted ? <p>관리자에 의해 삭제된 답글 입니다.</p> : <p>{r.reply}</p>}
             <div className="flex flex-row gap-2 -mt-1">
               <p className="text-sm text-gray-500">{rDisplay}</p>
               <p className="text-sm text-gray-500">{rDate}</p>

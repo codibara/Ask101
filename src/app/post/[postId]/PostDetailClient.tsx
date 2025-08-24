@@ -64,11 +64,14 @@ const {
 
   const [commentInput, setCommentInput] = useState("");
   const [selectedOption, setSelectedOption] = useState<"A" | "B" | null>(null);
-  const [isAnyReplyOpen, setIsAnyReplyOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [, setDeleting] = useState(false);
   const [vA, setVA] = useState<number>(votes_a ?? 0);
   const [vB, setVB] = useState<number>(votes_b ?? 0);
+  const [openReplyId, setOpenReplyId] = useState<number | null>(null);
+
+  // If you have a “main input box”, hide it when ANY reply box is open:
+  const isAnyReplyOpen = openReplyId !== null;
   const [voting, setVoting] = useState(false);
 
   // keep a local list so we can append without refetch
@@ -465,8 +468,8 @@ const MODAL_CONFIG: Record<ModalKind, {
                     is_deleted={c.is_deleted}
                     created_at={c.created_at}
                     isLoggedIn={isLoggedIn}
-                    setIsAnyReplyOpen={setIsAnyReplyOpen}
-                    isAnyReplyOpen={isAnyReplyOpen}
+                    openReplyId={openReplyId}
+                    setOpenReplyId={setOpenReplyId}
                     replies={repliesByParent[c.id] ?? []}
                     onSubmitReply={submitChildReply}
                 />
