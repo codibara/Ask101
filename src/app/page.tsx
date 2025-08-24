@@ -1,13 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getPostsPage } from "@/lib/getPostService";
-import { db } from "@/db";
-import { 
-  posts as postsTable, 
-  users as usersTable, 
-  votes as votesTable, 
-  reply as repliesTable } from "@/db/schema/tables";
-import { and, eq, isNull, count, desc } from "drizzle-orm";
 import PostListClient from "./postListClient"; // new client component
 
 

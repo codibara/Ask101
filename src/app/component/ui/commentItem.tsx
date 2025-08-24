@@ -3,7 +3,7 @@
 import Pill from "@/app/component/ui/pill";
 import { ChatLeftText } from "react-bootstrap-icons";
 import Button from "./button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Comment, User } from "@/types/post";
 
 type ReplyItem = Comment & { author: User };

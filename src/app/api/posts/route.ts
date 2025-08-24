@@ -150,7 +150,7 @@ export async function GET(request: Request) {
     : null;
 
     return NextResponse.json({ items: page, nextCursor, userId });
-  } catch (err: any) {
+  } catch (err) {
     console.error("/api/posts GET error:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
