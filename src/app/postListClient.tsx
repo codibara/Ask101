@@ -55,13 +55,13 @@ export default function PostListClient({
       <PostList rows={rows} isMyPost={false} />
       {/* Status / sentinel */}
       {errored && <div className="text-red-500 py-3">{errored}</div>}
-      {cursor ? (
+      {cursor && 
         <div ref={sentinelRef} className="py-6 text-center">
-          {loading ? 
-          (
+          {loading && 
+          
           <div className="mx-auto">
             <svg
-                className="animate-spin h-5 w-5 text-current"
+                className="animate-spin h-5 w-5 text-current mx-auto"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -80,12 +80,10 @@ export default function PostListClient({
                 d="M12 2a10 10 0 1 1-7.07 17.07l2.83-2.83A6 6 0 1 0 12 6V2z"
             />
             </svg>
-          </div>) : (<div></div>)
+          </div>
         }
         </div>
-      ) : (
-        <div></div>
-      )}
+      }
     </>
   );
 }
