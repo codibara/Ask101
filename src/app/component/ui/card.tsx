@@ -13,7 +13,7 @@ const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, v
 
 
     return(
-        <Link href={`/post/${postId}`} className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full border border-dark-900 hover:bg-neutral-800 onpress:bg-neutral-700">
+        <Link href={`/post/${postId}`} className="flex flex-col bg-dark-900 rounded-xl p-3 gap-5 w-full border border-dark-900 hover:bg-neutral-800 active:bg-neutral-700">
         
         <div className="flex flex-col gap-4">
             <div className='w-[100%]'>
