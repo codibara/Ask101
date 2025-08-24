@@ -11,7 +11,8 @@ import PageHeader from "@/app/component/shared/pageHeader";
 import ConfirmModal from "@/app/component/ui/confirmModal";
 import Button from "@/app/component/ui/button";
 
-import type { Post, User } from "@/types/post";
+import type { User } from "@/types/post";
+import type { PostRow } from "./page";
 
 // 1) Define the "kinds" your modal can show
 type ModalKind = 'deletePost' | 'selfVote' | 'loginReqired' | 'voteEnded';
@@ -37,28 +38,29 @@ export default function PostDetailClient({
   post,
   comments: initialComments,
 }: {
-  post: Post;
+  post: PostRow;
   comments: CommentWithAuthor[];
 }) {
 
-const {
-    postId,
-    title,
-    content,
-    option_a,
-    option_b,
-    is_end_vote,
-    viewCount,
-    author,
-    created_at,
-    votes_a,
-    votes_b,
-    } = post;
-  const display_name = author.display_name;
-  const pillSex = author.sex;
-  const pillMbti = author.mbti;
-  const pillAge = author.age;
-  const pillJob = author.job;
+  const p = post.post;
+  const a = post.author;
+
+  const postId = p.id;
+  const title = p.title;
+  const content = p.content;
+  const option_a = p.option_a;
+  const option_b = p.option_b;
+  const is_end_vote = p.is_end_vote;
+  const created_at = p.created_at;
+  const votes_a = p.votes_a;
+  const votes_b = p.votes_b;
+
+  // author fields (note: API uses displayName)
+  const display_name = a.displayName; // keep your local var name if you like
+  const pillSex = a.sex;
+  const pillMbti = a.mbti;
+  const pillAge = a.age;
+  const pillJob = a.job;
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -83,7 +85,7 @@ const {
 
   const isLoggedIn = !!session?.user;
   const currentUserId = session?.user?.id;
-  const isMyPost = currentUserId === author.userId; 
+  const isMyPost = currentUserId === a.id; 
 
   const isAWinning = (vA ?? 0) >= (vB ?? 0);
   const isBWinning = (vB ?? 0) >= (vA ?? 0);
@@ -97,9 +99,12 @@ const {
       if (row?.vote === "A" || row?.vote === "B") {
         setSelectedOption(row.vote);
       }
+      console.log(postId)
     };
     fetchMyVote();
   }, [isLoggedIn, currentUserId, postId, selectedOption]);
+
+
 
 
  // --- group comments whenever allComments changes
@@ -361,9 +366,7 @@ const MODAL_CONFIG: Record<ModalKind, {
           <div className="flex flex-row gap-2">
             <p className="font-medium">{display_name}</p>
             <p className="font-medium">
-              {created_at instanceof Date
-                ? created_at.toLocaleDateString()
-                : new Date(created_at).toLocaleDateString()}
+              {created_at}
             </p>
           </div>
           <div className="flex flex-row gap-2">
@@ -373,7 +376,7 @@ const MODAL_CONFIG: Record<ModalKind, {
             </div>
             <div className="flex items-center gap-1">
               <Eye size={16} />
-              <p className="text-xs font-medium">{viewCount ?? 0}</p>
+              <p className="text-xs font-medium">0</p>
             </div>
           </div>
         </div>

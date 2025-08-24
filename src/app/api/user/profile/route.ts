@@ -95,7 +95,7 @@ export async function PUT(request: NextRequest) {
       const [current] = await db
         .select({ birthYear: users.birthYear })
         .from(users)
-        .where(eq(users.id, parseInt(session.user.id)))
+        .where(eq(users.id, session.user.id))
         .limit(1);
 
       normalizedBirthYear =
@@ -111,7 +111,7 @@ export async function PUT(request: NextRequest) {
     const [updated] = await db
       .update(users)
       .set(updateData)
-      .where(eq(users.id, parseInt(session.user.id)))
+      .where(eq(users.id, session.user.id))
       .returning({
         id: users.id,
         displayName: users.displayName,

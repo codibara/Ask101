@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
+import { db } from "@/db/index";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getPostsPage, type PostsCursor } from "@/lib/getPostService";
-
-import { db } from "@/db/index";
 import { posts, users, reply as repliesTable } from "@/db/schema/tables";
-import { eq, sql } from "drizzle-orm";
+import { and, desc, eq, lt, or, sql } from "drizzle-orm";
 
-function formatYMD(date: Date | string | null): string | null {
+
+type Cursor = { createdAt: string; id: number } | null;
+
+function formatYMD(date: Date | string | null | undefined): string | null {
   if (!date) return null;
   const d = date instanceof Date ? date : new Date(date);
   return d.toISOString().split("T")[0]; // "YYYY-MM-DD"
@@ -15,14 +16,14 @@ function formatYMD(date: Date | string | null): string | null {
 
 export async function GET(request: Request) {
   try {
-    // @ts-expect-error: type error (next-auth in RSC)
+    // @ts-expect-error next-auth in RSC
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id) || -1;
 
     const { searchParams } = new URL(request.url);
     const idParam = searchParams.get("id");
 
-    // ---- Single post by id --------------------------------------------------
+    // ---------- Single post by id (returns nested shape) ----------
     if (idParam) {
       const id = Number(idParam);
 
@@ -96,31 +97,107 @@ export async function GET(request: Request) {
       return NextResponse.json(item);
     }
 
-    // ---- Paginated list via shared helper ----------------------------------
+    // ---------- Paginated list (keyset/cursor) ----------
     const limit = Math.max(1, Math.min(50, Number(searchParams.get("limit") ?? 10)));
 
-    // cursor is sent as JSON with string date; convert to PostsCursor (Date)
-    let cursor: PostsCursor = null;
-    const raw = searchParams.get("cursor");
-    if (raw) {
+    let cursor: Cursor = null;
+    const rawCursor = searchParams.get("cursor");
+    if (rawCursor) {
       try {
-        const c = JSON.parse(raw);
-        if (c && typeof c.id === "number" && typeof c.createdAt === "string") {
-          cursor = { id: c.id, createdAt: new Date(c.createdAt) };
+        const c = JSON.parse(rawCursor);
+        if (c && typeof c.createdAt === "string" && typeof c.id === "number") {
+          cursor = c; // createdAt should be a full ISO datetime string
         }
       } catch {
         /* ignore bad cursor */
       }
     }
 
-    const { items, nextCursor } = await getPostsPage({ limit, cursor, userId });
+    const whereKeyset = cursor
+      ? or(
+          lt(posts.createdAt, new Date(cursor.createdAt)),
+          and(eq(posts.createdAt, new Date(cursor.createdAt)), lt(posts.id, cursor.id))
+        )
+      : undefined;
 
-    // convert nextCursor Date -> string for the client
-    const nextCursorOut = nextCursor
-      ? { id: nextCursor.id, createdAt: nextCursor.createdAt.toISOString() }
-      : null;
+    const commentCountExpr = sql<number>`
+      (select count(*)
+       from ${repliesTable} r
+       where r.post_id = ${posts.id}
+         and r.parent_reply_id is null)
+    `.as("commentCount");
 
-    return NextResponse.json({ items, nextCursor: nextCursorOut, userId });
+    const baseSelect = db
+      .select({
+        postId: posts.id,
+        title: posts.title,
+        content: posts.content,
+        option_a: posts.optionA,
+        option_b: posts.optionB,
+        votes_a: posts.votesA,
+        votes_b: posts.votesB,
+        is_end_vote: posts.isEndVote,
+        created_at: posts.createdAt,
+        ended_at: posts.endedAt,
+        commentCount: commentCountExpr,
+        author: {
+          userId: users.id,
+          display_name: users.displayName,
+          sex: users.sex,
+          mbti: users.mbti,
+          birth_year: users.birthYear,
+          job: users.job,
+          age: users.age,
+        },
+      })
+      .from(posts)
+      .innerJoin(users, eq(posts.authorId, users.id))
+      .orderBy(desc(posts.createdAt), desc(posts.id))
+      .limit(limit + 1);
+
+    const rows = whereKeyset ? await baseSelect.where(whereKeyset) : await baseSelect;
+
+    // Slice to page & map to nested items (dates formatted to YYYY-MM-DD)
+    const trimmed = rows.slice(0, limit);
+    const items = trimmed.map((r) => ({
+      post: {
+        id: r.postId,
+        title: r.title,
+        content: r.content,
+        author_id: r.author.userId,
+        created_at: formatYMD(r.created_at)!,
+        option_a: r.option_a,
+        option_b: r.option_b,
+        votes_a: r.votes_a,
+        votes_b: r.votes_b,
+        ended_at: formatYMD(r.ended_at),
+        is_end_vote: r.is_end_vote ?? null,
+      },
+      author: {
+        id: r.author.userId,
+        displayName: r.author.display_name,
+        sex: r.author.sex,
+        mbti: r.author.mbti,
+        birthYear: r.author.birth_year,
+        job: r.author.job,
+        age: r.author.age,
+      },
+      commentCount: r.commentCount,
+      userVoteId: null,
+    }));
+
+    // Build cursor from the *unformatted* created_at (full datetime), to avoid pagination gaps
+    const hasMore = rows.length > limit;
+    const lastRaw = trimmed[trimmed.length - 1];
+    const nextCursor: Cursor =
+      hasMore && lastRaw
+        ? {
+            createdAt: new Date(lastRaw.created_at).toISOString(), // full ISO timestamp
+            id: lastRaw.postId,
+          }
+        : null;
+
+    return NextResponse.json({ items, nextCursor, userId });
   } catch (err) {
     console.error("/api/posts GET error:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

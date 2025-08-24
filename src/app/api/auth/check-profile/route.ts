@@ -21,7 +21,7 @@ export async function GET() {
     const userResult = await db
       .select({ displayName: users.displayName })
       .from(users)
-      .where(eq(users.id, parseInt(session.user.id)))
+      .where(eq(users.id, session.user.id))
       .limit(1);
 
     if (userResult.length > 0 && userResult[0].displayName) {
