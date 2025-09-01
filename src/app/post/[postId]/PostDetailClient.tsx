@@ -395,7 +395,7 @@ const MODAL_CONFIG: Record<ModalKind, {
                 <input
                   type="text"
                   className="w-full px-2 bg-dark-900 rounded-md focus:outline-none"
-                  placeholder={isLoggedIn ? "작성한 댓글은 수정 및 삭제가 불가합니다." : "댓글을 작성하려면 로그인이 필요합니다."}
+                  placeholder={isLoggedIn ? "작성한 댓글은 수정 및 삭제가 불가능합니다." : "댓글을 작성하려면 로그인이 필요합니다."}
                   value={commentInput}
                   onChange={(e) => setCommentInput(e.target.value)}
                   disabled={isLoggedIn ? false : true}

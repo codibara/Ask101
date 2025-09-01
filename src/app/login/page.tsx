@@ -65,7 +65,7 @@ export default function Navigation() {
             <div className="flex flex-col gap-4 items-center">
               <p className="text-[10px]">
                 로그인하시면 Codibara의{" "}
-                <span className="font-semibold">이용약관</span>에 동의하는
+                <span className="font-semibold"><a href="https://www.codibara.com/#/policy" target="_blank">이용약관</a></span>에 동의하는
                 것으로 간주합니다.
               </p>
               <p className="text-[10px]">ⓒ 2025 Codibara</p>

@@ -14,7 +14,7 @@ type PageHeaderProps = {
   postId?: number;
 };
 
-export default function PageHeader({ onDeleteClick, onEditClick, title, showDropdown = true, showBack = true , isButtonDisabled = false}: PageHeaderProps) {
+export default function PageHeader({ onDeleteClick, onEditClick, title, showDropdown = true, showBack = true, isButtonDisabled = false}: PageHeaderProps) {
   const router = useRouter();
 
   const options = [

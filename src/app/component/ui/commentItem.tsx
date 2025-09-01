@@ -100,7 +100,7 @@ const CommentItem = ({
               <input
                 type="text"
                 className={`${isReplyOpen ? "block" : "hidden"} w-full px-2 bg-dark-900 rounded-md focus:outline-none`}
-                placeholder="작성한 답글은 수정 및 삭제가 불가합니다."
+                placeholder="작성한 답글은 수정 및 삭제가 불가능합니다."
                 value={commentInput}
                 onChange={(e) => setCommentInput(e.target.value)}
               />

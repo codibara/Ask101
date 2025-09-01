@@ -60,10 +60,10 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
         />
       ) : (
         <div className="w-full flex flex-row items-center justify-center mb-2">
-        <ul className="flex flex-row bg-dark-900 rounded-full">
-          <li>
+        <ul className="w-full max-w-[453px]  flex flex-row bg-dark-900 rounded-full">
+          <li className="flex-1/3">
             <button
-              className={`text-[16px] py-2 px-9 rounded-full cursor-pointer ${
+              className={`text-[16px] w-full py-2 px-7 sm:px-9 rounded-full cursor-pointer ${
                 tab === "ongoing" ? "bg-gray-600" : ""
               }`}
               onClick={() => setTab("ongoing")}
@@ -71,9 +71,9 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
               진행중
             </button>
           </li>
-          <li>
+          <li className="flex-1/3">
             <button
-              className={`text-[16px] py-2 px-9 rounded-full cursor-pointer ${
+              className={`text-[16px] w-full py-2 px-7 sm:px-9 rounded-full cursor-pointer ${
                 tab === "participating" ? "bg-gray-600" : ""
               }`}
               onClick={() => setTab("participating")}
@@ -81,9 +81,9 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
               참여중
             </button>
           </li>
-          <li>
+          <li className="flex-1/3">
             <button
-              className={`text-[16px] py-2 px-9 rounded-full cursor-pointer ${
+              className={`text-[16px] w-full py-2 px-7 sm:px-9 rounded-full cursor-pointer ${
                 tab === "ended" ? "bg-gray-600" : ""
               }`}
               onClick={() => setTab("ended")}
