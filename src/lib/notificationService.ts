@@ -1,6 +1,6 @@
 import { db } from "@/db/index";
 import { notifications, posts, reply as repliesTable } from "@/db/schema/tables";
-import { eq, and, ne } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export const NotificationService = {
   // Create notification when someone replies to a post

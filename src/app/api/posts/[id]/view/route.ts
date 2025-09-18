@@ -6,9 +6,10 @@ import { eq, sql } from "drizzle-orm";
 // POST: Increment view count for a post
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const postId = parseInt(params.id);
 
     if (!postId || isNaN(postId)) {

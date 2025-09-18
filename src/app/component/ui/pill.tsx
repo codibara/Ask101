@@ -1,6 +1,6 @@
 import { User } from "@/types/post";
 
-interface PillProps extends User {}
+type PillProps = User;
 
 const Pill = ({ sex, mbti, age, job }: PillProps) => (
     <ul className="flex flex-row gap-1">

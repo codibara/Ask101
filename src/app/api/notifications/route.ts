@@ -5,7 +5,7 @@ import { authOptions } from "@/lib/auth";
 import { posts, users, reply as repliesTable } from "@/db/schema/tables";
 import { eq, desc, and, or, ne, isNotNull, sql } from "drizzle-orm";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // @ts-expect-error: type error
     const session = await getServerSession(authOptions);
@@ -147,8 +147,8 @@ export async function GET(request: Request) {
 
     // Sort by createdAt (most recent first)
     notifications.sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
       return dateB - dateA;
     });
 

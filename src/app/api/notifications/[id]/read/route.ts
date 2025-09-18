@@ -5,9 +5,10 @@ import { NotificationService } from "@/lib/notificationService";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     // @ts-expect-error: type error
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id);
