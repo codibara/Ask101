@@ -107,6 +107,7 @@ export const posts = pgTable("posts", {
   optionB: varchar("option_b", { length: 11 }).notNull(), // Text for option B
   votesA: integer("votes_a").notNull().default(0), // Number of votes for option A
   votesB: integer("votes_b").notNull().default(0), // Number of votes for option B
+  viewCount: integer("view_count").notNull().default(0), // Number of times the post has been viewed
   isEndVote: boolean("is_end_vote").notNull().default(false), // Auto-end when total votes reach 101
   endedAt: timestamp("ended_at", { mode: "date" }), // Time when voting ended
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // Time when the post was created
@@ -165,3 +166,30 @@ export const savedPosts = pgTable(
     uniqueUserPost: sql`UNIQUE(${table.userId}, ${table.postId})`,
   })
 );
+
+// Notification type enum
+export const NotificationType = pgEnum("notification_type", [
+  "reply_on_post",      // 새로운 댓글이 달렸습니다
+  "reply_on_reply",     // 당신의 댓글에 답글이 달렸습니다
+  "post_ended",         // 투표가 완료되었습니다
+  "post_flagged",       // 게시물이 신고되었습니다
+  "post_activity",      // 게시물이 인기 있어요
+]);
+
+// Notifications table
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(), // User who receives the notification
+  type: NotificationType().notNull(), // Type of notification
+  postId: integer("post_id")
+    .references(() => posts.id, { onDelete: "cascade" })
+    .notNull(), // Related post
+  actorId: integer("actor_id")
+    .references(() => users.id, { onDelete: "set null" }), // User who triggered the notification
+  replyId: integer("reply_id")
+    .references(() => reply.id, { onDelete: "cascade" }), // Related reply (if applicable)
+  isRead: boolean("is_read").notNull().default(false), // Read status
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+});

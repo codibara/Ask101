@@ -15,6 +15,7 @@ type Row = {
     option_b: string;
     votes_a: number;
     votes_b: number;
+    view_count: number;
     ended_at: Date | string | null;
     is_end_vote: boolean | null;
   };
@@ -106,7 +107,7 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
             content={post.content}
             author_id={post.author_id}
             commentCount={commentCount}
-            viewCount={2}
+            viewCount={post.view_count}
             option_a={post.option_a}
             option_b={post.option_b}
             votes_a={post.votes_a}

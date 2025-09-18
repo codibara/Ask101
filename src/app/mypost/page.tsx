@@ -30,6 +30,7 @@ export default async function MyPostsPage() {
         option_b: postsTable.optionB,
         votes_a: postsTable.votesA,
         votes_b: postsTable.votesB,
+        view_count: postsTable.viewCount,
         ended_at: postsTable.endedAt,
         is_end_vote: postsTable.isEndVote,
       },

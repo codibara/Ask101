@@ -70,6 +70,7 @@ export default function PostDetailClient({
   const [, setDeleting] = useState(false);
   const [vA, setVA] = useState<number>(votes_a ?? 0);
   const [vB, setVB] = useState<number>(votes_b ?? 0);
+  const [viewCount, setViewCount] = useState<number>(p.view_count ?? 0);
   const [openReplyId, setOpenReplyId] = useState<number | null>(null);
 
   // If you have a “main input box”, hide it when ANY reply box is open:
@@ -99,10 +100,50 @@ export default function PostDetailClient({
       if (row?.vote === "A" || row?.vote === "B") {
         setSelectedOption(row.vote);
       }
-      console.log(postId)
     };
     fetchMyVote();
-  }, [isLoggedIn, currentUserId, postId, selectedOption]);
+  }, [isLoggedIn, currentUserId, postId]);
+
+  // Increment view count when the page loads
+  useEffect(() => {
+    let isCancelled = false;
+
+    const incrementViewCount = async () => {
+      // Check if we've already viewed this post in this session
+      const viewedPosts = sessionStorage.getItem('viewedPosts');
+      const viewed = viewedPosts ? JSON.parse(viewedPosts) : [];
+
+      if (viewed.includes(postId) || isCancelled) {
+        return; // Already viewed in this session, don't increment
+      }
+
+      try {
+        const res = await fetch(`/api/posts/${postId}/view`, {
+          method: "POST",
+        });
+        if (res.ok && !isCancelled) {
+          const data = await res.json();
+          setViewCount(data.viewCount);
+
+          // Mark this post as viewed in this session
+          viewed.push(postId);
+          sessionStorage.setItem('viewedPosts', JSON.stringify(viewed));
+        }
+      } catch (error) {
+        console.error("Failed to increment view count:", error);
+      }
+    };
+
+    // Add a small delay to debounce in case of StrictMode double-mounting
+    const timer = setTimeout(() => {
+      incrementViewCount();
+    }, 100);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [postId]);
 
 
 
@@ -376,7 +417,7 @@ const MODAL_CONFIG: Record<ModalKind, {
             </div>
             <div className="flex items-center gap-1">
               <Eye size={16} />
-              <p className="text-xs font-medium">0</p>
+              <p className="text-xs font-medium">{viewCount}</p>
             </div>
           </div>
         </div>

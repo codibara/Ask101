@@ -14,6 +14,7 @@ export type PostRow = {
     option_b: string;
     votes_a: number;
     votes_b: number;
+    view_count: number;
     ended_at: string | null;     // "YYYY-MM-DD" | null
     is_end_vote: boolean | null;
   };

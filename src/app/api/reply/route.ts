@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db/index";
 import { reply, users } from "@/db/schema/tables";
 import { eq } from "drizzle-orm";
+import { NotificationService } from "@/lib/notificationService";
 
 // GET: List all replies or a single reply by ?id=
 export async function GET(request: Request) {
@@ -75,13 +76,22 @@ export async function POST(request: Request) {
           name: users.name,
           email: users.email,
           birth_year: users.birthYear,
-          age: users.age,              
+          age: users.age,
         },
       })
       .from(reply)
       .innerJoin(users, eq(reply.userId, users.id))
       .where(eq(reply.id, inserted.id))
       .limit(1);
+
+    // Create notification based on reply type
+    if (parentIdNum === null) {
+      // This is a reply to a post
+      await NotificationService.createReplyOnPostNotification(postIdNum, userIdNum, inserted.id);
+    } else {
+      // This is a reply to another reply
+      await NotificationService.createReplyOnReplyNotification(postIdNum, userIdNum, inserted.id, parentIdNum);
+    }
 
     return NextResponse.json(joined, { status: 201 });
   } catch (error) {

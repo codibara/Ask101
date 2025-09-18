@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { posts } from "@/db/schema/tables";
 import { eq } from "drizzle-orm";
+import { NotificationService } from "./notificationService";
 
 /**
  * Check if a post has reached 101 total votes and auto-end it if so
@@ -43,6 +44,9 @@ export async function checkAndAutoEndVote(postId: number): Promise<boolean> {
           endedAt: new Date(),
         })
         .where(eq(posts.id, postId));
+
+      // Create notification for post ending
+      await NotificationService.createPostEndedNotification(postId);
 
       console.log(
         `Vote auto-ended for post ${postId} with ${totalVotes} total votes`

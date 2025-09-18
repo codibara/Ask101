@@ -15,6 +15,7 @@ export type PostListRow = {
     option_b: string;
     votes_a: number;
     votes_b: number;
+    view_count: number;
     ended_at: string | null;
     is_end_vote: boolean | null;       // normalize to string|null
   };
