@@ -35,7 +35,7 @@ export async function checkAndAutoEndVote(postId: number): Promise<boolean> {
     const totalVotes = post.votesA + post.votesB;
 
     // Check if total votes reached 101
-    if (totalVotes >= 101) {
+    if (totalVotes >= 3) {
       // Auto-end the vote
       await db
         .update(posts)
