@@ -10,6 +10,21 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: "MinCho",
   description: "Ask questions and get answers from the community",
+  openGraph: {
+    title: "MinCho",
+    description: "Ask questions and get answers from the community",
+    url: "https://https://mincho.codibara.com/",
+    siteName: "MinCho",
+    images: [
+      {
+        url: "https://myapp.com/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
