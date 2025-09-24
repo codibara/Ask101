@@ -13,6 +13,7 @@ export interface Post {
     created_at: string | Date;
     is_end_vote?: boolean | null;
     author: User;
+    userVoteChoice: "A" | "B" | null;
   }
 
   export interface Comment {

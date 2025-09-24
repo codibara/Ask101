@@ -46,6 +46,7 @@ export default async function MyPostsPage() {
       // only top-level comments
       commentCount: count(repliesTable.id),
       userVoteId: votesTable.id,
+      userVoteChoice: votesTable.vote,
     })
     .from(postsTable)
     .innerJoin(usersTable, eq(postsTable.authorId, usersTable.id))
@@ -82,6 +83,7 @@ export default async function MyPostsPage() {
     author: r.author,
     commentCount: r.commentCount,
     userVoteId: r.userVoteId ?? null,
+    userVoteChoice: r.userVoteChoice ?? null,
   }));
 
   return (

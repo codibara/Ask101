@@ -54,6 +54,11 @@ export async function getPostsPage({
       },
       commentCount: count(repliesTable.id),
       userVoteId: votesTable.id,
+      userVote: {
+        id: votesTable.id,
+        choice: votesTable.vote,
+      },
+
     })
     .from(postsTable)
     .innerJoin(usersTable, eq(postsTable.authorId, usersTable.id))
@@ -85,6 +90,7 @@ export async function getPostsPage({
     author: r.author,
     userVoteId: r.userVoteId,
     commentCount: r.commentCount,
+    userVoteChoice: r.userVote?.choice ?? null,
   }));
 
   const hasMore = rowsRaw.length > limit;

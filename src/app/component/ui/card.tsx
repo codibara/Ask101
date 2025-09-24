@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 
 import Link from 'next/link';
 
-const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, viewCount, option_a, option_b, votes_a, votes_b, author }: Post) => {
+const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, viewCount, option_a, option_b, votes_a, votes_b, author, userVoteChoice }: Post) => {
 
     const { sex, mbti, age, job, display_name } = author;
 
@@ -19,7 +19,7 @@ const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, v
             <div className='w-[100%]'>
                 <div>
                     <h1 className="text-xl truncate text-ellipsis overflow-hidden whitespace-nowrap font-semibold mb-2">
-                        {is_end_vote && <span className="text-xs py-1 px-2 text-dark-950 bg-main rounded-sm mr-2 align-middle">투표완료</span>}
+                        {is_end_vote && <span className="text-xs py-1 px-2 text-dark-950 bg-main rounded-sm mr-2 align-middle">투표종료</span>}
                         {title}
                     </h1>
                 </div>
@@ -39,11 +39,11 @@ const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, v
             }
         </div>
         <div className="flex flex-row justify-center gap-4">
-            <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 border-transparent ${isAWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
+            <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 ${userVoteChoice == 'A' ? 'border-white' : 'border-transparent '} ${isAWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
                 <p className="text-[64px] text-dark-950 font-semibold leading-16 ">{votes_a}</p>
                 <p className="text-xs text-dark-950">{option_a}</p>
             </div>
-            <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 border-transparent ${isBWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
+            <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 ${userVoteChoice == 'B' ? 'border-white' : 'border-transparent '} ${isBWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
                 <p className="text-[64px] text-dark-950 font-semibold leading-16">{votes_b}</p>
                 <p className="text-xs text-dark-950">{option_b}</p>
             </div>

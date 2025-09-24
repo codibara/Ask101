@@ -29,7 +29,8 @@ type Row = {
     age: string | null;
   };
   commentCount: number,
-  userVoteId: number | null;
+  userVoteId: number | null,
+  userVoteChoice: "A" | "B" | null,
 };
 
 export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: boolean }) {
@@ -89,7 +90,7 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
               }`}
               onClick={() => setTab("ended")}
             >
-              완료됨
+              종료됨
             </button>
           </li>
         </ul>
@@ -99,7 +100,7 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
 
       {/* Card List */}
       <div className="max-w-2xl mx-auto flex flex-col gap-4 py-4">
-        {filtered.length !== 0 ? filtered.map(({ post, author, commentCount }) => (
+        {filtered.length !== 0 ? filtered.map(({ post, author, commentCount, userVoteChoice }) => (
           <Card
             key={post.id}
             postId={post.id}
@@ -114,6 +115,7 @@ export default function PostList({ rows, isMyPost }: { rows: Row[], isMyPost: bo
             votes_b={post.votes_b}
             is_end_vote={post.is_end_vote}
             created_at={post.created_at}
+            userVoteChoice={userVoteChoice}
             author={{
               userId: author.id,
               display_name: author.displayName,

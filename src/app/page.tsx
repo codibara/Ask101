@@ -29,7 +29,8 @@ export type PostListRow = {
     age: string | null;
   };
   commentCount: number,
-  userVoteId: number | null;
+  userVoteId: number | null,
+  userVoteChoice: "A" | "B" | null,
 };
 
 export default async function Home() {
