@@ -27,14 +27,14 @@ export default function Navigation() {
                             before:w-2 before:h-2 before:bg-main before:rounded-full">
                 초
               </p> */}
-              <p className="relative text-4xl font-bold text-main mb-3">민</p>
-              <p className="text-4xl font-bold text-main mb-3">초</p>
-              <p className="text-4xl font-bold text-main mb-3">는</p>
+              <p className="text-5xl font-bold text-main mb-3">민</p>
+              <p className="text-5xl font-bold text-main mb-3">초</p>
+              <p className="text-5xl font-bold text-main mb-3">는</p>
             </div>
 
-                <p className="text-3xl font-medium">치약이다 vs 아니다</p>
+                <p className="text-4xl font-medium">치약이다 vs 아니다</p>
             </div>
-            <p className="text-sm mt-2">로그인이 필요한 서비스 입니다.</p>
+            <p className="mt-2">로그인이 필요한 서비스 입니다.</p>
           </div>
           <div className="flex flex-col items-center gap-9">
             {status === "loading" ? (
