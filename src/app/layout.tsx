@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "MinCho",
     description: "Ask questions and get answers from the community",
-    url: "https://https://mincho.codibara.com/",
+    url: "https://mincho.codibara.com/",
     siteName: "MinCho",
     images: [
       {

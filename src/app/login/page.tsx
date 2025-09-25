@@ -14,9 +14,27 @@ export default function Navigation() {
     <div className="mx-auto px-4 md:px-26">
       <div className="flex flex-row justify-center py-4">
         <div className="w-[328px] md:w-[484px] min-h-[calc(100svh-180px)] md:h-svh flex flex-col gap-6 md:justify-center md:items-center">
-          <div className="flex-grow md:flex-none flex flex-col gap-4">
-            <div className="md:hidden">Text</div>
-            <p>로그인이 필요한 서비스 입니다.</p>
+          <div className="flex-grow md:flex-none flex flex-col gap-4 mt-8">
+            <div className="md:hidden">
+            <div className="flex items-end">
+              {/* <p className="relative text-4xl font-bold text-main mb-3 
+                            before:content-[''] before:absolute before:top-[-14px] before:left-1/2 before:-translate-x-1/2 
+                            before:w-2 before:h-2 before:bg-main before:rounded-full">
+                민
+              </p>
+              <p className="relative text-4xl font-bold text-main mb-3 
+                            before:content-[''] before:absolute before:top-[-14px] before:left-1/2 before:-translate-x-1/2 
+                            before:w-2 before:h-2 before:bg-main before:rounded-full">
+                초
+              </p> */}
+              <p className="relative text-4xl font-bold text-main mb-3">민</p>
+              <p className="text-4xl font-bold text-main mb-3">초</p>
+              <p className="text-4xl font-bold text-main mb-3">는</p>
+            </div>
+
+                <p className="text-3xl font-medium">치약이다 vs 아니다</p>
+            </div>
+            <p className="text-sm mt-2">로그인이 필요한 서비스 입니다.</p>
           </div>
           <div className="flex flex-col items-center gap-9">
             {status === "loading" ? (
@@ -65,7 +83,7 @@ export default function Navigation() {
             <div className="flex flex-col gap-4 items-center">
               <p className="text-[10px]">
                 로그인하시면 Codibara의{" "}
-                <span className="font-semibold"><a href="https://www.codibara.com/#/policy" target="_blank">이용약관</a></span>에 동의하는
+                <span><a href="https://www.codibara.com/#/policy" target="_blank" className="font-semibold">이용약관</a></span>에 동의하는
                 것으로 간주합니다.
               </p>
               <p className="text-[10px]">ⓒ 2025 Codibara</p>
