@@ -172,8 +172,8 @@ export const NotificationType = pgEnum("notification_type", [
   "reply_on_post",      // 새로운 댓글이 달렸습니다
   "reply_on_reply",     // 당신의 댓글에 답글이 달렸습니다
   "post_ended",         // 투표가 완료되었습니다
-  "post_flagged",       // 게시물이 신고되었습니다
   "post_activity",      // 게시물이 인기 있어요
+  "announcement",       // 새로운 공지사항
 ]);
 
 // Notifications table
@@ -184,8 +184,8 @@ export const notifications = pgTable("notifications", {
     .notNull(), // User who receives the notification
   type: NotificationType().notNull(), // Type of notification
   postId: integer("post_id")
-    .references(() => posts.id, { onDelete: "cascade" })
-    .notNull(), // Related post
+    .references(() => posts.id, { onDelete: "cascade" }), // Related post (nullable for announcements)
+  announceId: integer("announce_id"), // Related announcement (nullable, not a FK since announcements are mock data)
   actorId: integer("actor_id")
     .references(() => users.id, { onDelete: "set null" }), // User who triggered the notification
   replyId: integer("reply_id")

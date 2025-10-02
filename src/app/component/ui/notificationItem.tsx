@@ -1,12 +1,14 @@
 import { Notification } from "@/types/notification";
 import Link from 'next/link';
 
-const NotificationItem = ({ postId, title, content, category, date, checked }: Notification) => {
+const NotificationItem = ({ postId, announceId, title, content, category, date, checked }: Notification) => {
     const isNotice = category === "공지";
+    // If announceId exists, link to announcement, otherwise link to post
+    const href = announceId ? `/announcement/${announceId}` : `/post/${postId}`;
 
     return (
         <div className="flex flex-col gap-4">
-            <Link href={isNotice ? `/announcement/${postId}` : `/post/${postId}`} className={`${checked ? "opacity-50" : ""} flex flex-col items-start w-full gap-1 ${isNotice ? 'bg-main' : 'bg-dark-900'} rounded-xl p-5`}>
+            <Link href={href} className={`${checked ? "opacity-50" : ""} flex flex-col items-start w-full gap-1 ${isNotice ? 'bg-main' : 'bg-dark-900'} rounded-xl p-5`}>
                 <div className="w-full flex flex-row justify-between">
                     <div className={`${isNotice ? 'bg-dark-950 text-main' : ' text-main border border-main'} rounded-full py-0.5 px-6 text-[10px]`}>
                         {category}

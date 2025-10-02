@@ -1,5 +1,5 @@
 import { db } from "@/db/index";
-import { notifications, posts, reply as repliesTable } from "@/db/schema/tables";
+import { notifications, posts, reply as repliesTable, votes } from "@/db/schema/tables";
 import { eq, and } from "drizzle-orm";
 
 export const NotificationService = {
@@ -60,7 +60,7 @@ export const NotificationService = {
   // Create notification when post reaches 101 votes
   async createPostEndedNotification(postId: number) {
     try {
-      // Get the post author and all participants
+      // Get the post author
       const post = await db
         .select({ authorId: posts.authorId })
         .from(posts)
@@ -69,15 +69,29 @@ export const NotificationService = {
 
       if (!post.length) return;
 
-      // Notify post author
-      await db.insert(notifications).values({
-        userId: post[0].authorId,
-        type: "post_ended",
+      // Get all users who voted on this post
+      const voters = await db
+        .select({ userId: votes.userId })
+        .from(votes)
+        .where(eq(votes.postId, postId))
+        .groupBy(votes.userId);
+
+      // Get all unique user IDs (voters + author)
+      const userIds = new Set<number>();
+      userIds.add(post[0].authorId); // Add post author
+      voters.forEach(voter => userIds.add(voter.userId)); // Add all voters
+
+      // Create notifications for all participants
+      const notificationValues = Array.from(userIds).map(userId => ({
+        userId,
+        type: "post_ended" as const,
         postId,
         isRead: false,
-      });
+      }));
 
-      // TODO: Optionally notify all participants (voters, commenters)
+      if (notificationValues.length > 0) {
+        await db.insert(notifications).values(notificationValues);
+      }
     } catch (error) {
       console.error("Error creating post_ended notification:", error);
     }
@@ -156,6 +170,47 @@ export const NotificationService = {
         .where(eq(notifications.userId, userId));
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
+    }
+  },
+
+  // Create announcement notification for all users
+  async createAnnouncementNotification(announceId: number, title: string) {
+    try {
+      // Get all users with notifications enabled
+      const usersWithNotifications = await db
+        .select({ id: posts.authorId })
+        .from(posts)
+        .groupBy(posts.authorId);
+
+      if (!usersWithNotifications.length) return;
+
+      // Create notification for each user
+      const notificationValues = usersWithNotifications.map((user) => ({
+        userId: user.id,
+        type: "announcement" as const,
+        announceId,
+        isRead: false,
+      }));
+
+      await db.insert(notifications).values(notificationValues);
+    } catch (error) {
+      console.error("Error creating announcement notification:", error);
+    }
+  },
+
+  // Create announcement notification for specific users
+  async createAnnouncementNotificationForUsers(announceId: number, userIds: number[]) {
+    try {
+      const notificationValues = userIds.map((userId) => ({
+        userId,
+        type: "announcement" as const,
+        announceId,
+        isRead: false,
+      }));
+
+      await db.insert(notifications).values(notificationValues);
+    } catch (error) {
+      console.error("Error creating announcement notification for users:", error);
     }
   },
 };

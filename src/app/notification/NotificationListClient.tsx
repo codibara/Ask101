@@ -4,12 +4,13 @@ import { useState } from "react";
 import NotificationItem from "../component/ui/notificationItem";
 import PageHeader from "@/app/component/shared/pageHeader";
 
-type NotificationType = 'reply_on_post' | 'reply_on_reply' | 'post_ended' | 'post_activity' | 'post_flagged';
+type NotificationType = 'reply_on_post' | 'reply_on_reply' | 'post_ended' | 'post_activity' | 'announcement';
 
 interface Notification {
   id: number;
   type: NotificationType;
-  postId: number;
+  postId?: number;
+  announceId?: number;
   postTitle: string;
   actorName: string;
   isRead: boolean;
@@ -64,17 +65,17 @@ export default function NotificationListClient({ notifications }: Props) {
           title: '투표가 완료되었습니다',
           content: '당신의 게시물 투표가 101표에 도달하여 종료되었습니다.',
         };
-      case 'post_flagged':
-        return {
-          category: '신고',
-          title: '게시물이 신고되었습니다',
-          content: '작성하신 게시물이 다른 사용자에 의해 신고되었습니다. 관리자 검토 중입니다.',
-        };
       case 'post_activity':
         return {
           category: '공지',
           title: '게시물이 인기 있어요!',
           content: '작성하신 게시물이 많은 사람들의 공감을 얻고 있어요.',
+        };
+      case 'announcement':
+        return {
+          category: '공지',
+          title: notification.postTitle,
+          content: '새로운 공지사항이 등록되었습니다.',
         };
       default:
         return {
@@ -135,7 +136,8 @@ export default function NotificationListClient({ notifications }: Props) {
                   onClick={() => handleNotificationClick(notification.id)}
                 >
                   <NotificationItem
-                    postId={notification.postId}
+                    postId={notification.postId || 0}
+                    announceId={notification.announceId}
                     notiId={notification.id}
                     title={content.title}
                     category={content.category}

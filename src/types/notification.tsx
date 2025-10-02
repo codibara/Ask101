@@ -1,5 +1,6 @@
 export interface Notification{
     postId: number;
+    announceId?: number;
     notiId: number;
     category: string;
     title: string;
