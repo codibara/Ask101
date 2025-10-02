@@ -176,6 +176,35 @@ export const NotificationType = pgEnum("notification_type", [
   "announcement",       // 새로운 공지사항
 ]);
 
+// Announcements table
+export const announcements = pgTable("announcements", {
+  id: serial("id").primaryKey(), // Auto-incremented announcement ID
+  title: varchar("title", { length: 255 }).notNull(), // Announcement title
+  content: text("content").notNull(), // Announcement content
+  isActive: boolean("is_active").notNull().default(true), // Whether the announcement is active/visible
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(), // When the announcement was created
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(), // When the announcement was last updated
+});
+
+// Announcement reads table (tracks which users have read which announcements)
+export const announcementReads = pgTable(
+  "announcement_reads",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    announcementId: integer("announcement_id")
+      .references(() => announcements.id, { onDelete: "cascade" })
+      .notNull(),
+    readAt: timestamp("read_at", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => ({
+    // Unique constraint: one read record per user per announcement
+    uniqueUserAnnouncement: sql`UNIQUE(${table.userId}, ${table.announcementId})`,
+  })
+);
+
 // Notifications table
 export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey(),
@@ -185,7 +214,8 @@ export const notifications = pgTable("notifications", {
   type: NotificationType().notNull(), // Type of notification
   postId: integer("post_id")
     .references(() => posts.id, { onDelete: "cascade" }), // Related post (nullable for announcements)
-  announceId: integer("announce_id"), // Related announcement (nullable, not a FK since announcements are mock data)
+  announceId: integer("announce_id")
+    .references(() => announcements.id, { onDelete: "cascade" }), // Related announcement (nullable)
   actorId: integer("actor_id")
     .references(() => users.id, { onDelete: "set null" }), // User who triggered the notification
   replyId: integer("reply_id")

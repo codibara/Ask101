@@ -2,10 +2,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { notifications, posts, users } from "@/db/schema/tables";
-import { eq, desc } from "drizzle-orm";
+import { notifications, posts, users, announcements, announcementReads } from "@/db/schema/tables";
+import { eq, desc, and } from "drizzle-orm";
 import NotificationListClient from "./NotificationListClient";
-import { mockAnouncement } from "@/data/mock_announcement";
 
 export default async function NotificationPage() {
   // @ts-expect-error: type error
@@ -52,43 +51,53 @@ export default async function NotificationPage() {
 
   // Format database notifications for client component
   const formattedNotifications = notificationData.map(({ notification, post, actor }) => {
-    let title = "";
-
-    // For announcements, get title from mock data
-    if (notification.type === "announcement" && notification.announceId) {
-      const announcement = mockAnouncement.find(a => a.announceId === notification.announceId);
-      title = announcement?.title || "";
-    } else {
-      // For other notifications, use post title
-      title = post?.title || "";
-    }
-
     return {
       id: notification.id,
       type: notification.type,
       postId: notification.postId || undefined,
       announceId: notification.announceId || undefined,
-      postTitle: title,
+      postTitle: post?.title || "",
       actorName: actor?.displayName || "사용자",
       isRead: notification.isRead,
       createdAt: notification.createdAt.toISOString(),
     };
   });
 
-  // Add static announcements for all users (always show at the top)
-  const staticAnnouncements = mockAnouncement.map((announcement) => ({
-    id: -announcement.announceId, // Use negative ID to avoid conflicts with real notifications
+  // Fetch active announcements from database (show to all users)
+  const activeAnnouncements = await db
+    .select({
+      id: announcements.id,
+      title: announcements.title,
+      createdAt: announcements.createdAt,
+    })
+    .from(announcements)
+    .where(eq(announcements.isActive, true))
+    .orderBy(desc(announcements.createdAt));
+
+  // Get which announcements this user has read
+  const readAnnouncementIds = await db
+    .select({
+      announcementId: announcementReads.announcementId,
+    })
+    .from(announcementReads)
+    .where(eq(announcementReads.userId, userId));
+
+  const readIds = new Set(readAnnouncementIds.map(r => r.announcementId));
+
+  // Convert announcements to notification format
+  const announcementNotifications = activeAnnouncements.map((announcement) => ({
+    id: -announcement.id, // Use negative ID to avoid conflicts with real notifications
     type: "announcement" as const,
     postId: undefined,
-    announceId: announcement.announceId,
+    announceId: announcement.id,
     postTitle: announcement.title,
     actorName: "관리자",
-    isRead: false, // Always show as unread
-    createdAt: announcement.date + "T00:00:00.000Z",
+    isRead: readIds.has(announcement.id), // Check if user has read this announcement
+    createdAt: announcement.createdAt.toISOString(),
   }));
 
-  // Combine static announcements with user notifications
-  const allNotifications = [...staticAnnouncements, ...formattedNotifications];
+  // Combine announcements with user notifications
+  const allNotifications = [...announcementNotifications, ...formattedNotifications];
 
   console.log('Formatted notifications:', allNotifications);
 

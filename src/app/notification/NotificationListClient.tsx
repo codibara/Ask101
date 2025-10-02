@@ -87,11 +87,19 @@ export default function NotificationListClient({ notifications }: Props) {
   };
 
   // Mark notification as read when clicked
-  const handleNotificationClick = async (notificationId: number) => {
+  const handleNotificationClick = async (notificationId: number, announceId?: number) => {
     try {
-      await fetch(`/api/notifications/${notificationId}/read`, {
-        method: 'POST',
-      });
+      // If it's an announcement notification, mark the announcement as read
+      if (announceId) {
+        await fetch(`/api/announcements/${announceId}/read`, {
+          method: 'POST',
+        });
+      } else {
+        // Otherwise mark the regular notification as read
+        await fetch(`/api/notifications/${notificationId}/read`, {
+          method: 'POST',
+        });
+      }
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
     }
@@ -133,7 +141,7 @@ export default function NotificationListClient({ notifications }: Props) {
               return (
                 <div
                   key={notification.id}
-                  onClick={() => handleNotificationClick(notification.id)}
+                  onClick={() => handleNotificationClick(notification.id, notification.announceId)}
                 >
                   <NotificationItem
                     postId={notification.postId || 0}
