@@ -30,18 +30,28 @@ export default function NotificationListClient({ notifications }: Props) {
       ? notifications
       : notifications.filter((notification) => !notification.isRead);
 
-  // Format date to relative time
+  // Format date to relative time in Korean
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return '방금 전';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}분 전`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}시간 전`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}일 전`;
+    // Reset time to midnight for accurate day comparison
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const notificationDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-    return date.toLocaleDateString('ko-KR');
+    const diffInMs = today.getTime() - notificationDate.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInDays === 0) return '오늘';
+    if (diffInDays === 1) return '1일 전';
+    if (diffInDays < 30) return `${diffInDays}일 전`;
+
+    // For dates older than 30 days, show the actual date
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   };
 
   // Get notification content based on type

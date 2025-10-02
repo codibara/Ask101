@@ -5,6 +5,7 @@ import { db } from "@/db";
 import { notifications, posts, users, announcements, announcementReads } from "@/db/schema/tables";
 import { eq, desc } from "drizzle-orm";
 import NotificationListClient from "./NotificationListClient";
+import { cleanupOldNotifications } from "@/lib/cleanupService";
 
 export default async function NotificationPage() {
   // @ts-expect-error: type error
@@ -17,6 +18,12 @@ export default async function NotificationPage() {
   if (!userId) {
     redirect("/login");
   }
+
+  // Cleanup old notifications (older than 1 month)
+  // This runs in the background and doesn't block the page load
+  cleanupOldNotifications().catch(err =>
+    console.error("Background cleanup failed:", err)
+  );
 
   // Fetch notifications with related data
   const notificationData = await db
