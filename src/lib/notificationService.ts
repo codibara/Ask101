@@ -174,7 +174,7 @@ export const NotificationService = {
   },
 
   // Create announcement notification for all users
-  async createAnnouncementNotification(announceId: number, title: string) {
+  async createAnnouncementNotification(announceId: number) {
     try {
       // Get all users with notifications enabled
       const usersWithNotifications = await db
