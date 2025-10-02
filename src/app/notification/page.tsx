@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { notifications, posts, users, announcements, announcementReads } from "@/db/schema/tables";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import NotificationListClient from "./NotificationListClient";
 
 export default async function NotificationPage() {
