@@ -12,9 +12,6 @@ export default async function NotificationPage() {
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
 
-  console.log('Notification page - Session user:', session?.user);
-  console.log('Notification page - User ID:', userId);
-
   if (!userId) {
     redirect("/login");
   }

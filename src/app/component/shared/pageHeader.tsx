@@ -40,7 +40,7 @@ export default function PageHeader({ onDeleteClick, onEditClick, title, showDrop
         {showBack && 
           <button 
             onClick={() => {
-              router.push('/'); 
+              router.back(); 
             }} 
             className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
           <ChevronLeft />
