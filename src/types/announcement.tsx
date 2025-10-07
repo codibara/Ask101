@@ -5,4 +5,5 @@ export interface Announcement{
     date: string;
     commentCount: number;
     viewCount: number;
+    isActive?: boolean;
 }

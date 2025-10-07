@@ -58,6 +58,7 @@ export async function getAllAnnouncements() {
       date: announcement.date.toISOString().split('T')[0],
       commentCount: 0,
       viewCount: 0,
+      isActive: announcement.isActive,
     }));
   } catch (error) {
     console.error("Error fetching announcements:", error);

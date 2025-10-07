@@ -21,7 +21,6 @@ export default function Navigation() {
     { href: '/post', icon: PlusCircle, filledIcon: PlusCircleFill },
     { href: '/notification', icon: Bell, filledIcon: BellFill },
     { href: '/setting', icon: Gear, filledIcon: GearFill },
-    //{ href: '/login', icon: Google, filledIcon: Google },
   ];
 
     return (
