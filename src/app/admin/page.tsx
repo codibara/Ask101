@@ -50,16 +50,16 @@ export default function AdminPage() {
     
   }
   const handleEdit = async (id: number) => {
-        console.log("Edit pressed");
+        console.log(id,"Edit pressed");
     
   }
   const handleDelete = async (id: number) => {
-        console.log("Delete pressed");
+        console.log(id, "Delete pressed");
     
   }
 
   const handleActive = async (id: number) => {
-    console.log("Active pressed");
+    console.log(id,"Active pressed");
 
   }
 
