@@ -7,9 +7,10 @@ import {
   users,
   verificationTokens,
 } from "@/db/schema/tables";
+import type { NextAuthOptions } from "next-auth";
 
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: DrizzleAdapter(db, {
     // @ts-expect-error: type error
     usersTable: users, 
@@ -49,6 +50,6 @@ export const authOptions = {
     signIn: "/auth/signin",
   },
   session: {
-    strategy: "database",
+    strategy: "database" as const,
   },
 };
