@@ -15,10 +15,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    // Check authentication
+    // Check authentication and admin status
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!session?.user?.isAdmin) {
+      return NextResponse.json({ error: "Forbidden: Admin access required" }, { status: 403 });
     }
 
     // Parse request body

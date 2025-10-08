@@ -20,13 +20,16 @@ export default function AdminPage() {
 
   const isFormValid = title.trim().length > 0;
   //const [saving, setSaving] = useState(false);
-  const { status } = useSession();
-  
+  const { data: session, status } = useSession();
+
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.replace('/login?callbackUrl=' + encodeURIComponent('/myposts'));
+      router.replace('/login?callbackUrl=' + encodeURIComponent('/admin'));
+    } else if (status === 'authenticated' && !session?.user?.isAdmin) {
+      // Redirect non-admin users to home page
+      router.replace('/');
     }
-  }, [status, router]);
+  }, [status, session, router]);
   useEffect(() => {
     async function loadAnnouncements() {
       const res = await fetch('/api/announcements');
@@ -38,8 +41,11 @@ export default function AdminPage() {
     }
     loadAnnouncements();
   }, []);
-  
+
   if (status === 'loading') return null;
+
+  // Don't render admin page for non-admin users
+  if (!session?.user?.isAdmin) return null;
 
   const handleSave = async ({ title, content }: {
     title: string; content: string;

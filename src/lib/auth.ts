@@ -30,9 +30,10 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user, token }) {
       if (session.user) {
         session.user.id = user?.id ? Number(user.id) : (token?.sub ? Number(token.sub) : 0);
-        // Add displayName to session for easy access
+        // Add displayName and isAdmin to session for easy access
         if (user) {
           session.user.displayName = user.displayName;
+          session.user.isAdmin = user.isAdmin;
         }
       }
       return session;
