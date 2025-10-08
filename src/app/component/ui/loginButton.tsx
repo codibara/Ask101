@@ -39,7 +39,7 @@ const IconButton = ({ text, beforeIcon, afterIcon, onClick, variant = 'primary',
         disabled={disabled ? true : false}
         className={`${baseClasses} ${variantClasses[variant]}`}>
             {beforeIcon && <span>{beforeIcon}</span>}
-            {isGoogle ? <img src={GoogleIcon.src} className='w-5 h-5'/> : ""}
+            {isGoogle ? <img src={GoogleIcon.src} alt="Google" className='w-5 h-5'/> : ""}
             <span className={`flex-grow ${isGoogle || beforeIcon ? "-ml-5":""}`}>{text}</span>
             {afterIcon && <span>{afterIcon}</span>}
         </button>

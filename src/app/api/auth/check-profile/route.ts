@@ -7,7 +7,6 @@ import { eq } from "drizzle-orm";
 
 export async function GET() {
   try {
-    // @ts-expect-error: error placeholder
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {

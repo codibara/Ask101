@@ -27,10 +27,9 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    // @ts-expect-error: type error
     async session({ session, user, token }) {
       if (session.user) {
-        session.user.id = user?.id || token?.sub;
+        session.user.id = user?.id ? Number(user.id) : (token?.sub ? Number(token.sub) : 0);
         // Add displayName to session for easy access
         if (user) {
           session.user.displayName = user.displayName;
@@ -38,7 +37,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    // @ts-expect-error: type error
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

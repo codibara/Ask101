@@ -27,7 +27,6 @@ function isValidMbti(value: string): value is MbtiType {
 
 export async function PUT(request: NextRequest) {
   try {
-    // @ts-expect-error: error placeholder
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
@@ -146,7 +145,6 @@ export async function PUT(request: NextRequest) {
 
 export async function GET() {
   try {
-    // @ts-expect-error: error placeholder
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {

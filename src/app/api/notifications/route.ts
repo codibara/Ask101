@@ -7,7 +7,6 @@ import { eq, desc, and, or, ne, isNotNull, sql } from "drizzle-orm";
 
 export async function GET() {
   try {
-    // @ts-expect-error: type error
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id);
 

@@ -171,7 +171,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Vote not found" }, { status: 404 });
     }
     return NextResponse.json(deletedVote[0]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete vote" },
       { status: 500 }

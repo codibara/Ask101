@@ -13,7 +13,6 @@ import { and, eq, isNull, count, desc } from "drizzle-orm";
 import PostList from "@/app/postList";
 
 export default async function MyPostsPage() {
-  // @ts-expect-error: type error
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
   if (!userId) redirect("/login");

@@ -125,7 +125,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Reply not found" }, { status: 404 });
     }
     return NextResponse.json(updatedReply[0]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to update reply" },
       { status: 500 }
@@ -150,7 +150,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Reply not found" }, { status: 404 });
     }
     return NextResponse.json(deletedReply[0]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Failed to delete reply" },
       { status: 500 }

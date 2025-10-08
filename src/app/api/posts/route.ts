@@ -16,7 +16,6 @@ function formatYMD(date: Date | string | null | undefined): string | null {
 
 export async function GET(request: Request) {
   try {
-    // @ts-expect-error next-auth in RSC
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id) || -1;
 
@@ -211,7 +210,6 @@ export async function GET(request: Request) {
 // POST: Create a new post
 export async function POST(request: Request) {
   try {
-    // @ts-expect-error: type error
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id);
     if (!userId) {

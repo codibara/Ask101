@@ -34,7 +34,6 @@ export type PostListRow = {
 };
 
 export default async function Home() {
-  // @ts-expect-error: type error
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id) || -1;  // or null if not logged in
   

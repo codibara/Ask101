@@ -8,7 +8,6 @@ import NotificationListClient from "./NotificationListClient";
 import { cleanupOldNotifications } from "@/lib/cleanupService";
 
 export default async function NotificationPage() {
-  // @ts-expect-error: type error
   const session = await getServerSession(authOptions);
   const userId = Number(session?.user?.id);
 

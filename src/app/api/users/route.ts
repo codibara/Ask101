@@ -87,7 +87,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     return NextResponse.json(updatedUser[0]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
   }
 }
@@ -109,7 +109,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
     return NextResponse.json(deletedUser[0]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
   }
 }
