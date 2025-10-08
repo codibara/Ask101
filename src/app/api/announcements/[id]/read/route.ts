@@ -9,7 +9,6 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // @ts-expect-error: type error
     const session = await getServerSession(authOptions);
     const userId = Number(session?.user?.id);
 
