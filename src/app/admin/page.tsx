@@ -16,6 +16,7 @@ export default function AdminPage() {
   const [content, setContent] = useState("");
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   const isFormValid = title.trim().length > 0;
   //const [saving, setSaving] = useState(false);
@@ -40,27 +41,109 @@ export default function AdminPage() {
   
   if (status === 'loading') return null;
 
-  const handleCreate = async ({ title, content }: {
+  const handleSave = async ({ title, content }: {
     title: string; content: string;
   }) => {
     if (!isFormValid) return;
-    setTitle(title)
-    setContent(content)
-    console.log("Create pressed");
-    
+
+    try {
+      if (editingId) {
+        // Update existing announcement
+        const res = await fetch(`/api/announcements/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content }),
+        });
+
+        if (res.ok) {
+          const updatedAnnouncement = await res.json();
+          setAnnouncements(announcements.map(a =>
+            a.announceId === editingId ? { ...a, title: updatedAnnouncement.title, content: updatedAnnouncement.content } : a
+          ));
+          setTitle('');
+          setContent('');
+          setEditingId(null);
+          console.log("Announcement updated successfully");
+        } else {
+          console.error("Failed to update announcement");
+        }
+      } else {
+        // Create new announcement
+        const res = await fetch('/api/announcements', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, content, isActive: true }),
+        });
+
+        if (res.ok) {
+          const newAnnouncement = await res.json();
+          setAnnouncements([newAnnouncement, ...announcements]);
+          setTitle('');
+          setContent('');
+          console.log("Announcement created successfully");
+        } else {
+          console.error("Failed to create announcement");
+        }
+      }
+    } catch (error) {
+      console.error("Error saving announcement:", error);
+    }
   }
-  const handleEdit = async (id: number) => {
-        console.log(id,"Edit pressed");
-    
+
+  const handleEdit = (id: number) => {
+    const announcement = announcements.find(a => a.announceId === id);
+    if (!announcement) return;
+
+    setTitle(announcement.title);
+    setContent(announcement.content);
+    setEditingId(id);
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  const handleCancelEdit = () => {
+    setTitle('');
+    setContent('');
+    setEditingId(null);
+  }
+
   const handleDelete = async (id: number) => {
-        console.log(id, "Delete pressed");
-    
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    try {
+      const res = await fetch(`/api/announcements/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        setAnnouncements(announcements.filter(a => a.announceId !== id));
+        console.log("Announcement deleted successfully");
+      } else {
+        console.error("Failed to delete announcement");
+      }
+    } catch (error) {
+      console.error("Error deleting announcement:", error);
+    }
   }
 
   const handleActive = async (id: number) => {
-    console.log(id,"Active pressed");
+    try {
+      const res = await fetch(`/api/announcements/${id}`, {
+        method: 'PATCH',
+      });
 
+      if (res.ok) {
+        const updatedAnnouncement = await res.json();
+        setAnnouncements(announcements.map(a =>
+          a.announceId === id ? { ...a, isActive: updatedAnnouncement.isActive } : a
+        ));
+        console.log("Announcement active state toggled successfully");
+      } else {
+        console.error("Failed to toggle announcement active state");
+      }
+    } catch (error) {
+      console.error("Error toggling announcement active state:", error);
+    }
   }
 
   const toggleExpand = (id: number) => {
@@ -72,6 +155,19 @@ export default function AdminPage() {
           <div className="max-w-2xl mx-auto">
             <PageHeader showBack={false} showDropdown={false} title="관리자 페이지"/>
             <div className="flex flex-col gap-6 h-full min-h-[calc(100svh-210px)] md:min-h-[calc(100svh-100px)]">
+              {/* Editing indicator */}
+              {editingId && (
+                <div className="flex items-center justify-between bg-blue-900/30 px-4 py-2 rounded-md">
+                  <p className="text-sm text-blue-300">공지사항 수정 중...</p>
+                  <button
+                    onClick={handleCancelEdit}
+                    className="text-xs text-blue-300 hover:text-blue-100 underline"
+                  >
+                    취소
+                  </button>
+                </div>
+              )}
+
               {/* Title */}
               <div className="w-full flex flex-row gap-2 items-center">
                 <TextareaAutosize
@@ -98,11 +194,11 @@ export default function AdminPage() {
                   {content.length}/500자
                 </div>
               </div>
-              
+
                 <Button
-                    text="저장하기"
+                    text={editingId ? "수정하기" : "저장하기"}
                     variant="primary"
-                    onClick={() => handleCreate({ title, content })}
+                    onClick={() => handleSave({ title, content })}
                     isLink={false}
                     //isLoading={isSubmitting}
                     //disabled={isSubmitting || !isFormValid}
