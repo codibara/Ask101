@@ -15,7 +15,6 @@ type PageHeaderProps = {
 };
 
 export default function PageHeader({ onDeleteClick, onEditClick, title, showDropdown = true, showBack = true, isButtonDisabled = false}: PageHeaderProps) {
-  const router = useRouter();
 
   const options = [
     { icon: <Pencil />, label: '수정하기', value: 'edit', disabled: isButtonDisabled  },
@@ -41,7 +40,7 @@ export default function PageHeader({ onDeleteClick, onEditClick, title, showDrop
           <button 
             onClick={() => {
               window.history.back();
-              setTimeout(() => window.location.reload(), 150);
+              setTimeout(() => window.location.reload(), 100);
             }}
             className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
           <ChevronLeft />

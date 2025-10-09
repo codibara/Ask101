@@ -219,7 +219,7 @@ export default function AdminPage() {
                     <li
                         key={post.announceId}
                         onClick={() => toggleExpand(post.announceId)}
-                        className="w-[100%] flex flex-col sm:flex-row gap-2 cursor-pointer bg-dark-900 hover:bg-neutral-800  p-4 rounded-md"
+                        className="w-[100%] flex flex-col sm:flex-row gap-2 cursor-pointer bg-dark-900 hover:bg-neutral-800 p-4 rounded-md"
                     >
                         <div className="w-full sm:w-[70%] mr-4">
                         <p className="text-xs text-gray-400">{post.date}</p>
