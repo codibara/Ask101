@@ -1,7 +1,6 @@
 'use client';
 
 import Dropdown from '@/app/component/ui/dropdown';
-import { useRouter } from 'next/navigation';
 import { ChevronLeft, Trash3, Pencil } from 'react-bootstrap-icons';
 
 type PageHeaderProps = {
