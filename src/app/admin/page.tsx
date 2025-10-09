@@ -7,7 +7,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import Button from '../component/ui/button'
 import PageHeader from '../component/shared/pageHeader';
 import { Announcement } from '@/types/announcement';
-import { Trash3, Pencil, EyeFill, EyeSlash } from 'react-bootstrap-icons';
+import { Trash3, Pencil, EyeFill, EyeSlash, ExclamationTriangle } from 'react-bootstrap-icons';
+import ConfirmModal from '../component/ui/confirmModal';
 
 export default function AdminPage() {
 
@@ -17,6 +18,10 @@ export default function AdminPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
 
   const isFormValid = title.trim().length > 0;
   //const [saving, setSaving] = useState(false);
@@ -35,7 +40,6 @@ export default function AdminPage() {
       const res = await fetch('/api/announcements');
       if (res.ok) {
         const data = await res.json();
-        console.log("Fetched announcements:", data); // 👈 check here
         setAnnouncements(data);
       }
     }
@@ -51,7 +55,7 @@ export default function AdminPage() {
     title: string; content: string;
   }) => {
     if (!isFormValid) return;
-
+    setSaving(true);
     try {
       if (editingId) {
         // Update existing announcement
@@ -69,7 +73,6 @@ export default function AdminPage() {
           setTitle('');
           setContent('');
           setEditingId(null);
-          console.log("Announcement updated successfully");
         } else {
           console.error("Failed to update announcement");
         }
@@ -86,13 +89,14 @@ export default function AdminPage() {
           setAnnouncements([newAnnouncement, ...announcements]);
           setTitle('');
           setContent('');
-          console.log("Announcement created successfully");
         } else {
           console.error("Failed to create announcement");
         }
       }
     } catch (error) {
       console.error("Error saving announcement:", error);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -114,8 +118,6 @@ export default function AdminPage() {
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
-
     try {
       const res = await fetch(`/api/announcements/${id}`, {
         method: 'DELETE',
@@ -123,7 +125,6 @@ export default function AdminPage() {
 
       if (res.ok) {
         setAnnouncements(announcements.filter(a => a.announceId !== id));
-        console.log("Announcement deleted successfully");
       } else {
         console.error("Failed to delete announcement");
       }
@@ -143,7 +144,6 @@ export default function AdminPage() {
         setAnnouncements(announcements.map(a =>
           a.announceId === id ? { ...a, isActive: updatedAnnouncement.isActive } : a
         ));
-        console.log("Announcement active state toggled successfully");
       } else {
         console.error("Failed to toggle announcement active state");
       }
@@ -156,6 +156,8 @@ export default function AdminPage() {
     setExpandedId(expandedId === id ? null : id);
   };
 
+  
+
   return (
     <main className="min-h-[calc(100svh-160px)] px-5 pb-[88px] md:px-26 md:py-5">
           <div className="max-w-2xl mx-auto">
@@ -163,11 +165,11 @@ export default function AdminPage() {
             <div className="flex flex-col gap-6 h-full min-h-[calc(100svh-210px)] md:min-h-[calc(100svh-100px)]">
               {/* Editing indicator */}
               {editingId && (
-                <div className="flex items-center justify-between bg-blue-900/30 px-4 py-2 rounded-md">
-                  <p className="text-sm text-blue-300">공지사항 수정 중...</p>
+                <div className="flex items-center justify-between px-4 py-2 rounded-md border border-main">
+                  <p className="text-sm text-main">공지사항 수정 중...</p>
                   <button
                     onClick={handleCancelEdit}
-                    className="text-xs text-blue-300 hover:text-blue-100 underline"
+                    className="text-xs text-main underline"
                   >
                     취소
                   </button>
@@ -206,18 +208,18 @@ export default function AdminPage() {
                     variant="primary"
                     onClick={() => handleSave({ title, content })}
                     isLink={false}
-                    //isLoading={isSubmitting}
-                    //disabled={isSubmitting || !isFormValid}
+                    isLoading={saving}
+                    disabled={saving || !isFormValid}
                 />
               <div>
-                <ul className="bg-dark-900 p-4 rounded-lg">
+                <ul className='flex flex-col gap-2'>
                 {announcements.map((post) => {
                     const isExpanded = expandedId === post.announceId;
                     return (
                     <li
                         key={post.announceId}
                         onClick={() => toggleExpand(post.announceId)}
-                        className="w-[100%] flex flex-col sm:flex-row gap-2 cursor-pointer hover:bg-dark-800 rounded-md"
+                        className="w-[100%] flex flex-col sm:flex-row gap-2 cursor-pointer bg-dark-900 p-4 rounded-md"
                     >
                         <div className="w-full sm:w-[70%] mr-4">
                         <p className="text-xs text-gray-400">{post.date}</p>
@@ -244,7 +246,10 @@ export default function AdminPage() {
                                 <Pencil size={16}/>
                             </button>
                             <button
-                                onClick={() => handleDelete(post.announceId)}
+                                onClick={() => {
+                                  setDeleteTargetId(post.announceId);
+                                  setIsModalOpen(true);
+                                }}
                                 className="p-2 text-sm bg-main text-dark-950 rounded hover:bg-main-hover cursor-pointer"
                             >
                                 <Trash3 size={16}/>
@@ -265,6 +270,24 @@ export default function AdminPage() {
             </div>
             
           </div>
+          {/* Confirmation Modal */}
+          <ConfirmModal
+            icon={<ExclamationTriangle size={62} color="#7CF9DC" />}
+            primaryText="삭제"
+            secondaryText="취소"
+            title ='삭제 후 복원할 수 없습니다.'
+            message = '그래도 삭제 하시겠습니까?'
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setDeleteTargetId(null);
+            }}
+            onConfirm={() => {
+              if (deleteTargetId) handleDelete(deleteTargetId);
+              setIsModalOpen(false);
+              setDeleteTargetId(null);
+            }}
+          />
         </main>
   );
 }

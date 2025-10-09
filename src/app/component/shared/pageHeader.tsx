@@ -40,8 +40,9 @@ export default function PageHeader({ onDeleteClick, onEditClick, title, showDrop
         {showBack && 
           <button 
             onClick={() => {
-              router.back(); 
-            }} 
+              window.history.back();
+              setTimeout(() => window.location.reload(), 150);
+            }}
             className="flex flex-row items-center gap-1 py-1 cursor-pointer hover:bg-">
           <ChevronLeft />
           돌아가기
