@@ -212,7 +212,9 @@ export default function AdminPage() {
                     disabled={saving || !isFormValid}
                 />
               <div>
-                <ul className='flex flex-col gap-2'>
+                <div className='mt-4'>
+                <p className="block text-sm font-medium">공지 리스트</p>
+                <ul className='flex flex-col gap-2 mt-4'>
                 {announcements.map((post) => {
                     const isExpanded = expandedId === post.announceId;
                     return (
@@ -265,6 +267,7 @@ export default function AdminPage() {
                     );
                 })}
                     </ul>
+                    </div>
 
                 </div>
             </div>
