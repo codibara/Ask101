@@ -401,8 +401,8 @@ export default function Post() {
 
           {/* Occupation */}
           <div className="flex-grow">
+          <p className="block text-sm font-medium mb-2">직업</p>
           <div className="flex flex-grow flex-col gap-3 items-start">
-            <p className="block text-sm font-medium mb-2">직업</p>
             <div className="flex flex-row gap-2 flex-wrap">
               {["중고등학생", "대학/대학원생", "취준생", "직장인", "자영업", "전문직", "기타"].map((job) => (
                 <input
