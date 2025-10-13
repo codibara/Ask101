@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "MinCho",
-    description: "Ask questions and get answers from the community",
+    description: "민초는 치약이다 vs 아니다",
     url: "https://mincho.codibara.com/",
     siteName: "MinCho",
     images: [

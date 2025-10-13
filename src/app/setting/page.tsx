@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { BoxArrowRight, CheckCircle, Download } from "react-bootstrap-icons";
+import { BoxArrowRight, CheckCircle, Download, BoxArrowUpRight } from "react-bootstrap-icons";
 
 import PageHeader from "@/app/component/shared/pageHeader";
 import ConfirmModal from "../component/ui/confirmModal";
@@ -268,7 +268,14 @@ export default function Post() {
         <div className="flex flex-col gap-8 py-4 min-h-[calc(100svh-210px)] md:min-h-[calc(100svh-100px)]">
           {/* Nickname */}
           <div className="w-full flex flex-col gap-2">
-            <p className="block text-sm font-medium">닉네임</p>
+            <div className="flex flex-row justify-between">
+              <p className="block text-sm font-medium">닉네임</p>
+              {session?.user?.isAdmin && <button 
+              onClick={() =>router.push("/admin")}
+              className="flex gap-2 items-center text-xs text-main hover:underline cursor-pointer">
+                <BoxArrowUpRight size={14} /> 관리자페이지
+              </button>}
+            </div>
             <div className="relative">
               <input
                 type="text"
