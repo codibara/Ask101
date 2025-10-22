@@ -9,13 +9,13 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "MinCho",
-  description: "Ask questions and get answers from the community",
+  description: "민초는 치약이다 vs 아니다? 말 안 하면 속 터지는 논란 주제들, 어디 편에 설 건가요?",
   icons: {
     icon: '/logo.png', // Path to your icon in the public directory
   },
   openGraph: {
     title: "MinCho",
-    description: "민초는 치약이다 vs 아니다",
+    description: "민초는 치약이다 vs 아니다? 말 안 하면 속 터지는 논란 주제들, 어디 편에 설 건가요?",
     url: "https://mincho.codibara.com/",
     siteName: "MinCho",
     images: [
