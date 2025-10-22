@@ -20,9 +20,9 @@ export const metadata: Metadata = {
     siteName: "MinCho",
     images: [
       {
-        url: "https://mincho.codibara.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.e70350d0.png&w=384&q=75",
-        width: 1200,
-        height: 630,
+        url: "https://mincho.codibara.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmincho-new-log.58a73c13.png&w=256&q=75",
+        width: 1000,
+        height: 428,
       },
     ],
     locale: "en_US",
