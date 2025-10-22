@@ -4,12 +4,15 @@ import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ChatLeftText, Eye, ExclamationTriangle } from "react-bootstrap-icons";
+import Image from "next/image";
 
 import Pill from "@/app/component/ui/pill";
 import CommentItem from "@/app/component/ui/commentItem";
 import PageHeader from "@/app/component/shared/pageHeader";
 import ConfirmModal from "@/app/component/ui/confirmModal";
 import Button from "@/app/component/ui/button";
+import Badge from '../../../../public/vote-badge.png';
+
 
 import type { User } from "@/types/post";
 import type { PostRow } from "./page";
@@ -375,30 +378,24 @@ const MODAL_CONFIG: Record<ModalKind, {
         {/* Vote Box */}
         <div className="flex flex-row justify-center gap-4 mb-5">
           <button
-            className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 ${isAWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer ${
-              selectedOption === "A"
-                ? "border-gray-400"
-                : "border-transparent"
-            }`}
+            className={`relative flex flex-col justify-center items-center w-full max-w-[290px] p-5 ${isAWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}
             onClick={() => submitVote("A")}
           >
             <p className="text-[64px] text-dark-950 font-semibold leading-16">
               {vA ?? 0}
             </p>
             <p className="text-xs text-dark-950">{option_a}</p>
+            {selectedOption === 'A' && <Image src={Badge} alt='Badge' width={16} height={16} className='absolute top-1 right-1'/>}
           </button>
           <button
-            className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 ${isBWinning? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer ${
-              selectedOption === "B"
-                ? "border-gray-400"
-                : "border-transparent"
-            }`}
+            className={`relative flex flex-col justify-center items-center w-full max-w-[290px] p-5 ${isBWinning? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}
             onClick={() => submitVote("B")}
           >
             <p className="text-[64px] text-dark-950 font-semibold leading-16">
               {vB ?? 0}
             </p>
             <p className="text-xs text-dark-950">{option_b}</p>
+            {selectedOption === 'B' && <Image src={Badge} alt='Badge' width={16} height={16} className='absolute top-1 right-1'/>}
           </button>
         </div>
 

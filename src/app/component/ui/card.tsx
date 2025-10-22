@@ -1,6 +1,9 @@
 import { ChatLeftText, Eye  } from 'react-bootstrap-icons';
 import Pill from './pill';
+import Badge from '../../../../public/vote-badge.png';
+import Image from "next/image";
 import { Post } from "@/types/post";
+
 
 import Link from 'next/link';
 
@@ -39,13 +42,15 @@ const Card = ({ postId, title, content, is_end_vote, created_at, commentCount, v
             }
         </div>
         <div className="flex flex-row justify-center gap-4">
-            <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 ${userVoteChoice == 'A' ? 'border-white' : 'border-transparent '} ${isAWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
+            <div className={`relative flex flex-col justify-center items-center w-full max-w-[290px] p-5 ${isAWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
                 <p className="text-[64px] text-dark-950 font-semibold leading-16 ">{votes_a}</p>
                 <p className="text-xs text-dark-950">{option_a}</p>
+                {userVoteChoice == 'A' && <Image src={Badge} alt='Badge' width={16} height={16} className='absolute top-1 right-1'/>}
             </div>
-            <div className={`flex flex-col justify-center items-center w-full max-w-[290px] p-5 border-2 ${userVoteChoice == 'B' ? 'border-white' : 'border-transparent '} ${isBWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
+            <div className={`relative flex flex-col justify-center items-center w-full max-w-[290px] p-5 ${isBWinning ? 'bg-main' : 'bg-main-shade'} rounded-[10px] cursor-pointer`}>
                 <p className="text-[64px] text-dark-950 font-semibold leading-16">{votes_b}</p>
                 <p className="text-xs text-dark-950">{option_b}</p>
+                {userVoteChoice == 'B' && <Image src={Badge} alt='Badge' width={16} height={16} className='absolute top-1 right-1'/>}
             </div>
         </div>
         <div className="flex flex-row justify-between">

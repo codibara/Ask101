@@ -1,12 +1,11 @@
-import Logo from "../../../../public/logo.png";
+import Logo from "../../../../public/mincho-new-log.png";
 import Image from "next/image";
 
 const LogoMobile = () => (
     <Image
         src={Logo}
         alt="로고 이미지"
-        width={150}
-        height={200}
+        width={100}
         className="md:hidden py-5 mx-auto"
       />
 )
